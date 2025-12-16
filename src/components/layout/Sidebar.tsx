@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Users, Key, LayoutDashboard, Settings, FileText, BarChart3, ChevronDown, ChevronUp } from "lucide-react";
+import { Users, Key, Settings, FileText, BarChart3, ChevronDown, ChevronUp } from "lucide-react";
 
 interface NavItem {
   name: string;
@@ -61,7 +61,7 @@ const navSections: NavSection[] = [
   },
 ];
 
-export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
+export default function Sidebar({ isCollapsed }: SidebarProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>(["Platform"]);
   const location = useLocation();
 

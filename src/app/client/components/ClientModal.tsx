@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { X } from 'lucide-react';
-import { useClientStore } from '../../../store/useClientStore';
-import type { Client } from '../../../store/useClientStore';
-import * as Dialog from '@radix-ui/react-dialog';
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { X } from "lucide-react";
+import { useClientStore } from "../../../store/useClientStore";
+import * as Dialog from "@radix-ui/react-dialog";
 
 interface ClientModalProps {
   isOpen: boolean;
@@ -12,13 +11,14 @@ interface ClientModalProps {
 }
 
 interface ClientFormData {
-  nombre: string;
+  name: string;
   email: string;
-  telefono: string;
+  phone: string;
 }
 
 export default function ClientModal({ isOpen, onClose, clientId }: ClientModalProps) {
   const { clients, addClient, updateClient } = useClientStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -31,27 +31,35 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
   useEffect(() => {
     if (client) {
       reset({
-        nombre: client.nombre,
+        name: client.name,
         email: client.email,
-        telefono: client.telefono,
+        phone: client.phone,
       });
     } else {
       reset({
-        nombre: '',
-        email: '',
-        telefono: '',
+        name: "",
+        email: "",
+        phone: "",
       });
     }
   }, [client, reset, isOpen]);
 
-  const onSubmit = (data: ClientFormData) => {
-    if (clientId) {
-      updateClient(clientId, data);
-    } else {
-      addClient(data);
+  const onSubmit = async (data: ClientFormData) => {
+    setIsSubmitting(true);
+    try {
+      if (clientId) {
+        await updateClient(clientId, data);
+      } else {
+        await addClient(data);
+      }
+      onClose();
+      reset();
+    } catch (error) {
+      console.error("Error al guardar cliente:", error);
+      // El error ya está manejado en el store
+    } finally {
+      setIsSubmitting(false);
     }
-    onClose();
-    reset();
   };
 
   return (
@@ -62,7 +70,7 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <Dialog.Title className="text-2xl font-bold text-gray-900">
-              {clientId ? 'Editar Cliente' : 'Nuevo Cliente'}
+              {clientId ? "Editar Cliente" : "Nuevo Cliente"}
             </Dialog.Title>
             <Dialog.Close asChild>
               <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
@@ -79,24 +87,22 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
                 Nombre <span className="text-accent">*</span>
               </label>
               <input
-                {...register('nombre', {
-                  required: 'El nombre es requerido',
+                {...register("name", {
+                  required: "El nombre es requerido",
                   minLength: {
                     value: 2,
-                    message: 'El nombre debe tener al menos 2 caracteres',
+                    message: "El nombre debe tener al menos 2 caracteres",
                   },
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.nombre ? 'border-accent' : 'border-gray-200'}
+                  ${errors.name ? "border-accent" : "border-gray-200"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: Juan Pérez"
               />
-              {errors.nombre && (
-                <p className="mt-1 text-sm text-accent">{errors.nombre.message}</p>
-              )}
+              {errors.name && <p className="mt-1 text-sm text-accent">{errors.name.message}</p>}
             </div>
 
             {/* Email */}
@@ -106,24 +112,22 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
               </label>
               <input
                 type="email"
-                {...register('email', {
-                  required: 'El email es requerido',
+                {...register("email", {
+                  required: "El email es requerido",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'Email inválido',
+                    message: "Email inválido",
                   },
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.email ? 'border-accent' : 'border-gray-200'}
+                  ${errors.email ? "border-accent" : "border-gray-200"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: juan@example.com"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-accent">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-accent">{errors.email.message}</p>}
             </div>
 
             {/* Teléfono */}
@@ -133,24 +137,22 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
               </label>
               <input
                 type="tel"
-                {...register('telefono', {
-                  required: 'El teléfono es requerido',
+                {...register("phone", {
+                  required: "El teléfono es requerido",
                   pattern: {
                     value: /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/,
-                    message: 'Teléfono inválido',
+                    message: "Teléfono inválido",
                   },
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.telefono ? 'border-accent' : 'border-gray-200'}
+                  ${errors.phone ? "border-accent" : "border-gray-200"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: +1234567890"
               />
-              {errors.telefono && (
-                <p className="mt-1 text-sm text-accent">{errors.telefono.message}</p>
-              )}
+              {errors.phone && <p className="mt-1 text-sm text-accent">{errors.phone.message}</p>}
             </div>
 
             {/* Actions */}
@@ -164,9 +166,10 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary-600 text-white font-medium hover:from-primary-600 hover:to-primary-700 shadow-lg shadow-primary/30 transition-all hover:scale-105"
+                disabled={isSubmitting}
+                className="flex-1 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary-600 text-white font-medium hover:from-primary-600 hover:to-primary-700 shadow-lg shadow-primary/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {clientId ? 'Actualizar' : 'Crear'}
+                {isSubmitting ? "Guardando..." : clientId ? "Actualizar" : "Crear"}
               </button>
             </div>
           </form>

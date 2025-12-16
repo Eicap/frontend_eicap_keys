@@ -1,81 +1,102 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { clientService } from "../services/client.service";
 
 export interface Client {
   id: string;
-  nombre: string;
+  name: string;
   email: string;
-  telefono: string;
-  createdAt: Date;
+  phone: string;
+  created_at?: string;
 }
 
 interface ClientStore {
   clients: Client[];
   searchQuery: string;
   isLoading: boolean;
-  
+  error: string | null;
+
   // Actions
   setClients: (clients: Client[]) => void;
-  addClient: (client: Omit<Client, 'id' | 'createdAt'>) => void;
-  updateClient: (id: string, client: Partial<Client>) => void;
-  deleteClient: (id: string) => void;
+  fetchClients: () => Promise<void>;
+  addClient: (clientData: { name: string; email: string; phone: string }) => Promise<void>;
+  updateClient: (id: string, clientData: Partial<Client>) => Promise<void>;
+  deleteClient: (id: string) => Promise<void>;
   setSearchQuery: (query: string) => void;
-  
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+
   // Computed
   getFilteredClients: () => Client[];
 }
 
 export const useClientStore = create<ClientStore>((set, get) => ({
-  clients: [
-    {
-      id: '1',
-      nombre: 'Juan Pérez',
-      email: 'juan.perez@example.com',
-      telefono: '+1234567890',
-      createdAt: new Date('2024-01-15'),
-    },
-    {
-      id: '2',
-      nombre: 'María García',
-      email: 'maria.garcia@example.com',
-      telefono: '+1234567891',
-      createdAt: new Date('2024-02-20'),
-    },
-    {
-      id: '3',
-      nombre: 'Carlos López',
-      email: 'carlos.lopez@example.com',
-      telefono: '+1234567892',
-      createdAt: new Date('2024-03-10'),
-    },
-  ],
-  searchQuery: '',
+  clients: [],
+  searchQuery: "",
   isLoading: false,
+  error: null,
 
   setClients: (clients) => set({ clients }),
 
-  addClient: (clientData) => {
-    const newClient: Client = {
-      ...clientData,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date(),
-    };
-    set((state) => ({
-      clients: [...state.clients, newClient],
-    }));
+  setLoading: (isLoading) => set({ isLoading }),
+
+  setError: (error) => set({ error }),
+
+  fetchClients: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await clientService.getClients();
+      set({ clients: response.data.data });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error al cargar clientes";
+      set({ error: errorMessage });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  updateClient: (id, clientData) => {
-    set((state) => ({
-      clients: state.clients.map((client) =>
-        client.id === id ? { ...client, ...clientData } : client
-      ),
-    }));
+  addClient: async (clientData) => {
+    set({ isLoading: true, error: null });
+    try {
+      await clientService.createClient(clientData);
+      // Recargar lista después de crear
+      await get().fetchClients();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error al crear cliente";
+      set({ error: errorMessage });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  deleteClient: (id) => {
-    set((state) => ({
-      clients: state.clients.filter((client) => client.id !== id),
-    }));
+  updateClient: async (id, clientData) => {
+    set({ isLoading: true, error: null });
+    try {
+      await clientService.updateClient(id, clientData);
+      // Recargar lista después de actualizar
+      await get().fetchClients();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error al actualizar cliente";
+      set({ error: errorMessage });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  deleteClient: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      await clientService.deleteClient(id);
+      // Recargar lista después de eliminar
+      await get().fetchClients();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Error al eliminar cliente";
+      set({ error: errorMessage });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -87,9 +108,9 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     const query = searchQuery.toLowerCase();
     return clients.filter(
       (client) =>
-        client.nombre.toLowerCase().includes(query) ||
+        client.name.toLowerCase().includes(query) ||
         client.email.toLowerCase().includes(query) ||
-        client.telefono.includes(query)
+        client.phone.includes(query)
     );
   },
 }));
