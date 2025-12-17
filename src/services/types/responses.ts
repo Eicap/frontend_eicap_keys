@@ -68,3 +68,89 @@ export interface ClientListResponse {
   offset: number;
   pages: number;
 }
+
+// KeyType Types
+export interface KeyType {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface KeyTypeListResponse {
+  data: KeyType[];
+  total: number;
+  limit: number;
+  offset: number;
+  pages: number;
+}
+
+//Permissions
+export interface Permission {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface PermissionListResponse {
+  data: Permission[];
+  total: number;
+  limit: number;
+  offset: number;
+  pages: number;
+}
+
+// Keys
+export interface Key {
+  id: string;
+  code: string;
+  due_date: string;
+  init_date: string;
+  state?: "active" | "inactive";
+  client_id: string;
+  client_name: string;
+  key_type: KeyType;
+  permissions: Permission[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface KeyCreateInput {
+  code: string;
+  due_date: string;
+  init_date: string;
+  client_id: string;
+  status?: "active" | "inactive";
+  key_type_id: string;
+  permissions?: string[];
+}
+
+export interface KeyUpdateInput {
+  code?: string;
+  due_date?: string;
+  init_date?: string;
+  client_id?: string;
+  status?: "active" | "inactive";
+  key_type_id?: string;
+  permissions?: string[];
+}
+
+export interface KeyListResponse {
+  data: Key[];
+  total: number;
+  limit: number;
+  offset: number;
+  pages: number;
+}
+
+export interface KeyResponse {
+  id: string;
+  code: string;
+  due_date: string;
+  init_date: string;
+  state?: "active" | "inactive";
+  client_id: string;
+  client_name: string;
+  key_type: KeyType;
+  permissions: Permission[];
+  created_at: string;
+}

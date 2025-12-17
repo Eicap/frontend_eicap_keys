@@ -41,7 +41,14 @@ export default function ClientList() {
           <h1 className="text-3xl font-bold text-white mb-2">Clientes</h1>
           <p className="text-gray-400">Gestiona tus clientes de manera eficiente</p>
         </div>
-        <ActionButton onClick={() => setIsModalOpen(true)} icon={Plus} label="Nuevo Cliente" variant="create" />
+        <div className="flex flex-col items-end gap-4">
+          {/* Total de Clientes */}
+          <div className="text-right">
+            <p className="text-gray-400 text-sm">Total de clientes</p>
+            <p className="text-4xl font-bold text-white">{clients.length}</p>
+          </div>
+          <ActionButton onClick={() => setIsModalOpen(true)} icon={Plus} label="Nuevo Cliente" variant="create" />
+        </div>
       </div>
 
       {/* Search Bar */}
@@ -56,7 +63,7 @@ export default function ClientList() {
           <p className="text-gray-400 mt-4">Cargando clientes...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[calc(100vh-400px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
           {clients.map((client) => {
             return (
               <div
