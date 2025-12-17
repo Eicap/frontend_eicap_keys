@@ -1,89 +1,121 @@
-import { create } from 'zustand';
+import { create } from "zustand";
+import { keyService } from "@/services/key.service";
+import { clientService } from "@/services/client.service";
+import type { Key, KeyType, Permission, Client, KeyUpdateInput } from "@/services/types/responses";
 
-export interface KeyItem {
-  id: string;
-  code: string;
-  fechaInicio: Date;
-  fechaExpiracion: Date;
-  estado: 'activo' | 'inactivo' | 'expirado';
-  tipo: 'trial' | 'premium' | 'enterprise';
-  createdAt: Date;
-}
-
-interface KeyStore {
-  keys: KeyItem[];
+export interface KeyStore {
+  keys: Key[];
+  keyTypes: KeyType[];
+  permissions: Permission[];
+  clients: Client[];
   searchQuery: string;
   isLoading: boolean;
-  
+
   // Actions
-  setKeys: (keys: KeyItem[]) => void;
-  addKey: (key: Omit<KeyItem, 'id' | 'createdAt'>) => void;
-  updateKey: (id: string, key: Partial<KeyItem>) => void;
-  deleteKey: (id: string) => void;
+  fetchKeys: () => Promise<void>;
+  fetchKeyTypes: () => Promise<void>;
+  fetchPermissions: () => Promise<void>;
+  fetchClients: () => Promise<void>;
+  createKey: (data: {
+    code: string;
+    init_date: string;
+    due_date: string;
+    state: string;
+    key_type_id: string;
+    client_id?: string;
+    permissions?: string[];
+  }) => Promise<void>;
+  updateKey: (id: string, data: KeyUpdateInput) => Promise<void>;
+  deleteKey: (id: string) => Promise<void>;
   setSearchQuery: (query: string) => void;
-  
+
   // Computed
-  getFilteredKeys: () => KeyItem[];
+  getFilteredKeys: () => Key[];
 }
 
 export const useKeyStore = create<KeyStore>((set, get) => ({
-  keys: [
-    {
-      id: '1',
-      code: 'EICAP-2024-TRIAL-001',
-      fechaInicio: new Date('2024-01-01'),
-      fechaExpiracion: new Date('2024-12-31'),
-      estado: 'activo',
-      tipo: 'trial',
-      createdAt: new Date('2024-01-01'),
-    },
-    {
-      id: '2',
-      code: 'EICAP-2024-PREM-002',
-      fechaInicio: new Date('2024-02-01'),
-      fechaExpiracion: new Date('2025-02-01'),
-      estado: 'activo',
-      tipo: 'premium',
-      createdAt: new Date('2024-02-01'),
-    },
-    {
-      id: '3',
-      code: 'EICAP-2023-ENT-003',
-      fechaInicio: new Date('2023-06-01'),
-      fechaExpiracion: new Date('2024-06-01'),
-      estado: 'expirado',
-      tipo: 'enterprise',
-      createdAt: new Date('2023-06-01'),
-    },
-  ],
-  searchQuery: '',
+  keys: [],
+  keyTypes: [],
+  permissions: [],
+  clients: [],
+  searchQuery: "",
   isLoading: false,
 
-  setKeys: (keys) => set({ keys }),
-
-  addKey: (keyData) => {
-    const newKey: KeyItem = {
-      ...keyData,
-      id: Math.random().toString(36).substr(2, 9),
-      createdAt: new Date(),
-    };
-    set((state) => ({
-      keys: [...state.keys, newKey],
-    }));
+  fetchKeys: async () => {
+    try {
+      set({ isLoading: true });
+      const response = await keyService.getKeys();
+      set({ keys: response.data.data, isLoading: false });
+    } catch (error) {
+      console.error("Error fetching keys:", error);
+      set({ isLoading: false });
+    }
   },
 
-  updateKey: (id, keyData) => {
-    set((state) => ({
-      keys: state.keys.map((key) =>
-        key.id === id ? { ...key, ...keyData } : key
-      ),
-    }));
+  fetchKeyTypes: async () => {
+    try {
+      const response = await keyService.getKeysType();
+      set({ keyTypes: response.data.data.data });
+    } catch (error) {
+      console.error("Error fetching key types:", error);
+    }
   },
 
-  deleteKey: (id) => {
-    set((state) => ({
-      keys: state.keys.filter((key) => key.id !== id),
-    }));
+  fetchPermissions: async () => {
+    try {
+      const response = await keyService.getPermissions();
+      set({ permissions: response.data.data });
+    } catch (error) {
+      console.error("Error fetching permissions:", error);
+    }
+  },
+
+  fetchClients: async () => {
+    try {
+      const response = await clientService.getClients();
+      set({ clients: response.data.data });
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    }
+  },
+
+  createKey: async (data) => {
+    try {
+      set({ isLoading: true });
+      await keyService.createKey(data);
+      await get().fetchKeys();
+      set({ isLoading: false });
+    } catch (error) {
+      console.error("Error creating key:", error);
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
+  updateKey: async (id, data) => {
+    console.log("Updating key with ID:", id, "Data:", data);
+    try {
+      set({ isLoading: true });
+      await keyService.updateKey(id, data);
+      await get().fetchKeys();
+      set({ isLoading: false });
+    } catch (error) {
+      console.error("Error updating key:", error);
+      set({ isLoading: false });
+      throw error;
+    }
+  },
+
+  deleteKey: async (id) => {
+    try {
+      set({ isLoading: true });
+      await keyService.deleteKey(id);
+      await get().fetchKeys();
+      set({ isLoading: false });
+    } catch (error) {
+      console.error("Error deleting key:", error);
+      set({ isLoading: false });
+    }
   },
 
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -96,8 +128,10 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
     return keys.filter(
       (key) =>
         key.code.toLowerCase().includes(query) ||
-        key.tipo.toLowerCase().includes(query) ||
-        key.estado.toLowerCase().includes(query)
+        key.key_type.name.toLowerCase().includes(query) ||
+        key.state.toLowerCase().includes(query) ||
+        key.client_name?.toLowerCase().includes(query) ||
+        key.permissions.some((p) => p.name.toLowerCase().includes(query))
     );
   },
 }));

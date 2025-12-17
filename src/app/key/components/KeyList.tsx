@@ -1,25 +1,39 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useKeyStore } from '../../../store/useKeyStore';
-import { Plus, Edit2, Trash2, Key, Calendar, Shield, Zap, Crown, Rocket } from 'lucide-react';
+import { Plus, Edit2, Trash2, Key, Calendar, Shield, Zap, Building2, GraduationCap, Loader2 } from 'lucide-react';
 import SearchBar from '../../../components/shared/SearchBar';
 import ActionButton from '../../../components/shared/ActionButton';
 import KeyModal from './KeyModal';
 
 export default function KeyList() {
-  const { getFilteredKeys, searchQuery, setSearchQuery, deleteKey } = useKeyStore();
+  const { 
+    getFilteredKeys, 
+    searchQuery, 
+    setSearchQuery, 
+    deleteKey,
+    fetchKeys,
+    isLoading
+  } = useKeyStore();
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
 
   const keys = getFilteredKeys();
+
+  // Fetch keys on component mount
+  useEffect(() => {
+    fetchKeys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleEdit = (keyId: string) => {
     setEditingKey(keyId);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (keyId: string) => {
+  const handleDelete = async (keyId: string) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta key?')) {
-      deleteKey(keyId);
+      await deleteKey(keyId);
     }
   };
 
@@ -28,28 +42,23 @@ export default function KeyList() {
     setEditingKey(null);
   };
 
-  const getStatusConfig = (estado: string) => {
-    switch (estado) {
-      case 'activo':
+  const getStatusConfig = (state: string) => {
+    switch (state) {
+      case 'active':
         return {
           bg: 'bg-green-500/10',
           text: 'text-green-400',
           border: 'border-green-500/30',
           icon: <Zap className="w-3 h-3" />,
+          label: 'Activo',
         };
-      case 'inactivo':
+      case 'inactive':
         return {
           bg: 'bg-gray-500/10',
           text: 'text-gray-400',
           border: 'border-gray-500/30',
           icon: <Shield className="w-3 h-3" />,
-        };
-      case 'expirado':
-        return {
-          bg: 'bg-red-500/10',
-          text: 'text-red-400',
-          border: 'border-red-500/30',
-          icon: <Calendar className="w-3 h-3" />,
+          label: 'Inactivo',
         };
       default:
         return {
@@ -57,32 +66,26 @@ export default function KeyList() {
           text: 'text-gray-400',
           border: 'border-gray-500/30',
           icon: <Shield className="w-3 h-3" />,
+          label: state,
         };
     }
   };
 
-  const getTipoConfig = (tipo: string) => {
-    switch (tipo) {
-      case 'trial':
-        return {
-          bg: 'bg-blue-500/10',
-          text: 'text-blue-400',
-          border: 'border-blue-500/30',
-          icon: <Zap className="w-3 h-3" />,
-        };
-      case 'premium':
+  const getKeyTypeConfig = (keyTypeName: string) => {
+    switch (keyTypeName.toLowerCase()) {
+      case 'empresarial':
         return {
           bg: 'bg-purple-500/10',
           text: 'text-purple-400',
           border: 'border-purple-500/30',
-          icon: <Crown className="w-3 h-3" />,
+          icon: <Building2 className="w-3 h-3" />,
         };
-      case 'enterprise':
+      case 'estudiantil':
         return {
-          bg: 'bg-amber-500/10',
-          text: 'text-amber-400',
-          border: 'border-amber-500/30',
-          icon: <Rocket className="w-3 h-3" />,
+          bg: 'bg-blue-500/10',
+          text: 'text-blue-400',
+          border: 'border-blue-500/30',
+          icon: <GraduationCap className="w-3 h-3" />,
         };
       default:
         return {
@@ -93,6 +96,25 @@ export default function KeyList() {
         };
     }
   };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
+          <p className="text-gray-400">Cargando keys...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -114,20 +136,21 @@ export default function KeyList() {
       <SearchBar
         value={searchQuery}
         onChange={setSearchQuery}
-        placeholder="Buscar por código, tipo o estado..."
+        placeholder="Buscar por código, tipo, estado, cliente o permisos..."
       />
 
-      {/* Keys Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Keys Grid - Scrollable */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 max-h-[calc(100vh-350px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
         {keys.map((key) => {
-          const statusConfig = getStatusConfig(key.estado);
-          const tipoConfig = getTipoConfig(key.tipo);
+          const statusConfig = getStatusConfig(key.state);
+          const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
+          const isEmpresarial = key.key_type.name.toLowerCase() === 'empresarial';
           
           return (
             <div
               key={key.id}
               className="
-                group relative bg-[#1a1a1a] rounded-xl p-5
+                group relative bg-[#1a1a1a] rounded-xl p-6
                 border border-gray-800 hover:border-[#254181]
                 transition-all duration-300
                 hover:shadow-lg hover:shadow-[#254181]/20
@@ -161,7 +184,7 @@ export default function KeyList() {
                 {/* Code */}
                 <div className="mb-4 p-3 rounded-lg bg-gray-800/50 border border-gray-700">
                   <p className="text-xs text-gray-500 mb-1 font-medium">Código</p>
-                  <p className="font-mono text-xs font-bold text-white break-all">
+                  <p className="font-mono text-sm font-bold text-white break-all">
                     {key.code}
                   </p>
                 </div>
@@ -170,37 +193,72 @@ export default function KeyList() {
                 <div className="flex gap-2 mb-4 flex-wrap">
                   <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} flex items-center gap-1.5`}>
                     {statusConfig.icon}
-                    {key.estado.toUpperCase()}
+                    {statusConfig.label.toUpperCase()}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${tipoConfig.bg} ${tipoConfig.text} ${tipoConfig.border} flex items-center gap-1.5`}>
-                    {tipoConfig.icon}
-                    {key.tipo.toUpperCase()}
+                  <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border} flex items-center gap-1.5`}>
+                    {keyTypeConfig.icon}
+                    {key.key_type.name.toUpperCase()}
                   </span>
                 </div>
 
+                {/* Client - Only for empresarial */}
+                {isEmpresarial && key.client_name && (
+                  <div className="mb-4 p-3 rounded-lg bg-purple-500/5 border border-purple-500/20">
+                    <p className="text-xs text-purple-400 mb-1 font-medium flex items-center gap-1.5">
+                      <Building2 className="w-3 h-3" />
+                      Cliente
+                    </p>
+                    <p className="text-sm font-semibold text-purple-300">
+                      {key.client_name}
+                    </p>
+                  </div>
+                )}
+
+                {/* Permissions */}
+                {key.permissions && key.permissions.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-2 font-medium">Permisos</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {key.permissions.map((permission) => (
+                        <span
+                          key={permission.id}
+                          className="px-2 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                        >
+                          {permission.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Dates */}
-                <div className="space-y-2">
+                <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/50">
                     <Calendar className="w-4 h-4 text-blue-400" />
                     <span className="text-xs font-medium text-gray-400">Inicio:</span>
                     <span className="text-xs font-semibold text-blue-400">
-                      {new Date(key.fechaInicio).toLocaleDateString('es-ES')}
+                      {formatDate(key.init_date)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/50">
                     <Shield className="w-4 h-4 text-red-400" />
                     <span className="text-xs font-medium text-gray-400">Expira:</span>
                     <span className="text-xs font-semibold text-red-400">
-                      {new Date(key.fechaExpiracion).toLocaleDateString('es-ES')}
+                      {formatDate(key.due_date)}
                     </span>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="mt-4 pt-4 border-t border-gray-800">
+                <div className="pt-4 border-t border-gray-800 flex items-center justify-between">
                   <span className="text-xs text-gray-500">
-                    Creado: {new Date(key.createdAt).toLocaleDateString('es-ES')}
+                    Creado: {formatDate(key.created_at)}
                   </span>
+                  {key.user_name && (
+                    <span className="text-xs text-gray-500">
+                      Por: {key.user_name}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

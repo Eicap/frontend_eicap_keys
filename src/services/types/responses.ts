@@ -77,11 +77,13 @@ export interface KeyType {
 }
 
 export interface KeyTypeListResponse {
-  data: KeyType[];
-  total: number;
-  limit: number;
-  offset: number;
-  pages: number;
+  data: {
+    data: KeyType[];
+    total: number;
+    limit: number;
+    offset: number;
+    pages: number;
+  };
 }
 
 //Permissions
@@ -93,10 +95,6 @@ export interface Permission {
 
 export interface PermissionListResponse {
   data: Permission[];
-  total: number;
-  limit: number;
-  offset: number;
-  pages: number;
 }
 
 // Keys
@@ -105,20 +103,21 @@ export interface Key {
   code: string;
   due_date: string;
   init_date: string;
-  state?: "active" | "inactive";
+  state: "active" | "inactive";
+  user_id: string;
+  user_name: string;
   client_id: string;
   client_name: string;
   key_type: KeyType;
   permissions: Permission[];
   created_at: string;
-  updated_at: string;
 }
 
 export interface KeyCreateInput {
   code: string;
   due_date: string;
   init_date: string;
-  client_id: string;
+  client_id?: string;
   status?: "active" | "inactive";
   key_type_id: string;
   permissions?: string[];
