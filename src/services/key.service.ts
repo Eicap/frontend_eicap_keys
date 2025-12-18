@@ -19,7 +19,10 @@ export const keyService = {
   getPermissions: () => axiosInstance.get<PermissionListResponse>("/permissions"),
 
   // Get all keys
-  getKeys: () => axiosInstance.get<KeyListResponse>(`/keys`),
+  getKeys: (limit?: number, offset?: number) => 
+    axiosInstance.get<KeyListResponse>(`/keys`, {
+      params: { limit, offset }
+    }),
 
   getKeysByClient: (clientId: string) => axiosInstance.get<Key[]>(`/keys/client/${clientId}`),
 

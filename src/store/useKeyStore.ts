@@ -11,9 +11,13 @@ export interface KeyStore {
   clients: Client[];
   searchQuery: string;
   isLoading: boolean;
+  totalKeys: number;
+  currentPage: number;
+  itemsPerPage: number;
+  totalPages: number;
 
   // Actions
-  fetchKeys: () => Promise<void>;
+  fetchKeys: (limit?: number, offset?: number) => Promise<void>;
   fetchInactiveKeys: () => Promise<void>;
   fetchKeyTypes: () => Promise<void>;
   fetchPermissions: () => Promise<void>;
@@ -45,12 +49,24 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
   clients: [],
   searchQuery: "",
   isLoading: false,
+  totalKeys: 0,
+  currentPage: 1,
+  itemsPerPage: 10,
+  totalPages: 0,
 
-  fetchKeys: async () => {
+  fetchKeys: async (limit = 10, offset = 0) => {
     try {
       set({ isLoading: true });
-      const response = await keyService.getKeys();
-      set({ keys: response.data.data, isLoading: false });
+      const response = await keyService.getKeys(limit, offset);
+      const { data, total, pages } = response.data;
+      set({ 
+        keys: data, 
+        totalKeys: total,
+        totalPages: pages,
+        currentPage: Math.floor(offset / limit) + 1,
+        itemsPerPage: limit,
+        isLoading: false 
+      });
     } catch (error) {
       console.error("Error fetching keys:", error);
       set({ isLoading: false });

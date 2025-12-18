@@ -9,6 +9,7 @@ interface KeyModalProps {
   isOpen: boolean;
   onClose: () => void;
   keyId?: string | null;
+  mode?: 'create' | 'edit' | 'view';
 }
 
 interface KeyFormData {
@@ -21,7 +22,7 @@ interface KeyFormData {
   permissions?: string[];
 }
 
-export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
+export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: KeyModalProps) {
   const {
     keys,
     inactiveKeys,
@@ -164,6 +165,15 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
   };
 
   const isEmpresarial = selectedKeyType === "empresarial";
+  const isViewMode = mode === 'view';
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
@@ -174,10 +184,10 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
           <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
             <div>
               <Dialog.Title className="text-2xl font-bold text-gray-900 dark:text-white">
-                {keyId ? "Editar Key" : "Nueva Key"}
+                {isViewMode ? "Detalles de la Key" : keyId ? "Editar Key" : "Nueva Key"}
               </Dialog.Title>
               <Dialog.Description className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {keyId ? "Modifica los datos de la key" : "Completa el formulario para crear una nueva key"}
+                {isViewMode ? "Información completa de la key" : keyId ? "Modifica los datos de la key" : "Completa el formulario para crear una nueva key"}
               </Dialog.Description>
             </div>
             <Dialog.Close asChild>
@@ -187,9 +197,97 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
             </Dialog.Close>
           </div>
 
-          {/* Scrollable Form Content */}
+          {/* Scrollable Content */}
           <div className="overflow-y-auto flex-1 px-6 py-4">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" id="key-form">
+            {isViewMode && key ? (
+              /* View Mode - Read-only display */
+              <div className="space-y-6">
+                {/* Código */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Código</label>
+                  <div className="px-4 py-3 rounded-lg bg-muted/50 border border-border">
+                    <span className="font-mono text-lg font-bold text-card-foreground">{key.code}</span>
+                  </div>
+                </div>
+
+                {/* Tipo y Estado */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Key</label>
+                    <div className="px-4 py-3 rounded-lg bg-muted/50 border border-border">
+                      <span className="text-base font-semibold text-card-foreground capitalize">{key.key_type.name}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estado</label>
+                    <div className="px-4 py-3 rounded-lg bg-muted/50 border border-border">
+                      <span className="text-base font-semibold text-card-foreground capitalize">{key.state === 'active' ? 'Activo' : 'Inactivo'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cliente - Only for empresarial */}
+                {key.key_type.name.toLowerCase() === "empresarial" && key.client_name && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cliente</label>
+                    <div className="px-4 py-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                      <span className="text-base font-semibold text-purple-700 dark:text-purple-400">{key.client_name}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Fechas */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de Inicio</label>
+                    <div className="px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                      <span className="text-base font-semibold text-blue-700 dark:text-blue-400">{formatDate(key.init_date)}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de Expiración</label>
+                    <div className="px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30">
+                      <span className="text-base font-semibold text-red-700 dark:text-red-400">{formatDate(key.due_date)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Permisos - Only for empresarial */}
+                {key.key_type.name.toLowerCase() === "empresarial" && key.permissions && key.permissions.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Permisos</label>
+                    <div className="flex flex-wrap gap-2">
+                      {key.permissions.map((permission) => (
+                        <span
+                          key={permission.id}
+                          className="px-3 py-2 rounded-lg text-sm font-medium bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                        >
+                          {permission.name.charAt(0).toUpperCase() + permission.name.slice(1)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Metadata */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600 dark:text-gray-400">Creado:</span>
+                      <span className="ml-2 font-medium text-gray-900 dark:text-white">{formatDate(key.created_at)}</span>
+                    </div>
+                    {key.user_name && (
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">Por:</span>
+                        <span className="ml-2 font-medium text-gray-900 dark:text-white">{key.user_name}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Edit/Create Mode - Form */
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" id="key-form">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Code */}
                 <div className="md:col-span-2">
@@ -400,37 +498,50 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
                 )}
               </div>
             </form>
+            )}
           </div>
 
           {/* Fixed Footer with Actions */}
           <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-            <div className="flex gap-3">
+            {isViewMode ? (
+              /* View Mode - Only Close button */
               <button
                 type="button"
                 onClick={onClose}
-                disabled={isSubmitting}
-                className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-[#254181] to-[#3d5fa3] text-white font-semibold hover:from-[#1e3467] hover:to-[#254181] shadow-lg transition-all"
               >
-                Cancelar
+                Cerrar
               </button>
-              <button
-                type="submit"
-                form="key-form"
-                disabled={isSubmitting}
-                className="flex-1 px-4 py-3 rounded-lg bg-linear-to-r from-[#db1d25] to-[#ff3d47] text-white font-semibold hover:from-[#c01a21] hover:to-[#db1d25] shadow-lg shadow-red-500/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Guardando...
-                  </>
-                ) : keyId ? (
-                  "Actualizar"
-                ) : (
-                  "Crear"
-                )}
-              </button>
-            </div>
+            ) : (
+              /* Edit/Create Mode - Cancel and Submit buttons */
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  form="key-form"
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-3 rounded-lg bg-linear-to-r from-[#db1d25] to-[#ff3d47] text-white font-semibold hover:from-[#c01a21] hover:to-[#db1d25] shadow-lg shadow-red-500/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : keyId ? (
+                    "Actualizar"
+                  ) : (
+                    "Crear"
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </Dialog.Content>
       </Dialog.Portal>
