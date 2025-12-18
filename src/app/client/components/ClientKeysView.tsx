@@ -195,7 +195,7 @@ export default function ClientKeysView() {
             <Clock className="w-4 h-4 text-white/80" />
             <div>
               <p className="text-xs text-white/70">Cliente desde</p>
-              <p className="text-sm font-medium">{formatDate(client.created_at)}</p>
+              <p className="text-sm font-medium">{client.created_at ? formatDate(client.created_at) : "N/A"}</p>
             </div>
           </div>
         </div>
