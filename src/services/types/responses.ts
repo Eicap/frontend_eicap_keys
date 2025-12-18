@@ -108,6 +108,7 @@ export interface Key {
   user_name: string;
   client_id: string;
   client_name: string;
+  client?: Client;
   key_type: KeyType;
   permissions: Permission[];
   created_at: string;

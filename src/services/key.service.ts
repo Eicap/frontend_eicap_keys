@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axios";
 import type {
   GenerateCodeResponse,
   GenerateKeysInput,
+  Key,
   KeyCreateInput,
   KeyListResponse,
   KeyResponse,
@@ -19,6 +20,8 @@ export const keyService = {
 
   // Get all keys
   getKeys: () => axiosInstance.get<KeyListResponse>(`/keys`),
+
+  getKeysByClient: (clientId: string) => axiosInstance.get<Key[]>(`/keys/client/${clientId}`),
 
   generateKeyCode: () => axiosInstance.post<GenerateCodeResponse>("/keys/generate"),
 

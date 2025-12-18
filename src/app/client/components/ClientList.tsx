@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useClientStore } from "../../../store/useClientStore";
-import { Plus, Edit2, Trash2, Mail, Phone, User } from "lucide-react";
+import { Plus, Edit2, Trash2, Mail, Phone, User, Eye } from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import ClientModal from "./ClientModal";
 
 export default function ClientList() {
   const { getFilteredClients, searchQuery, setSearchQuery, deleteClient, fetchClients, isLoading } = useClientStore();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<string | null>(null);
 
@@ -83,6 +85,13 @@ export default function ClientList() {
                       {client.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex gap-2">
+                      <button
+                        onClick={() => navigate(`/client/${client.id}/keys`)}
+                        className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/30 transition-all"
+                        title="Ver Keys"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                       <button
                         onClick={() => handleEdit(client.id)}
                         className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"

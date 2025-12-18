@@ -19,7 +19,8 @@ import SearchBar from "../../../components/shared/SearchBar";
 import KeyModal from "./KeyModal";
 
 export default function InactiveKeyList() {
-  const { inactiveKeys, searchQuery, setSearchQuery, deleteKey, fetchInactiveKeys, isLoading, createBulkKeys } = useKeyStore();
+  const { inactiveKeys, searchQuery, setSearchQuery, deleteKey, fetchInactiveKeys, isLoading, createBulkKeys } =
+    useKeyStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -193,11 +194,7 @@ export default function InactiveKeyList() {
       </div>
 
       {/* Search Bar */}
-      <SearchBar
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Buscar por código, tipo o estado..."
-      />
+      <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Buscar por código, tipo o estado..." />
 
       {/* Table Container - Responsive */}
       <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -386,11 +383,7 @@ export default function InactiveKeyList() {
               <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
                   // Show first page, last page, current page, and pages around current
-                  if (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 1 && page <= currentPage + 1)
-                  ) {
+                  if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
                     return (
                       <button
                         key={page}
@@ -471,9 +464,7 @@ export default function InactiveKeyList() {
             {/* Content */}
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-card-foreground mb-2">
-                  Cantidad de Keys
-                </label>
+                <label className="block text-sm font-medium text-card-foreground mb-2">Cantidad de Keys</label>
                 <input
                   type="number"
                   min="1"
