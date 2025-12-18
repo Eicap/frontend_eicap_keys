@@ -14,13 +14,46 @@ export default function AppRoute() {
       <Routes>
         <Route index element={<SigninForm />} />
         <Route path="/signin" element={<AuthRoute />} />
-        <Route element={<DashboardLayout />}>
-          <Route path="/client/dashboard" element={<ClientForm />} />
-          <Route path="/client/:clientId/keys" element={<ClientKeysView />} />
-          <Route path="/key/dashboard" element={<KeyForm />} />
-          <Route path="/key/inactive" element={<InactiveKeyList />} />
-          <Route path="/reports" element={<KeyReports />} />
-        </Route>
+        <Route
+          path="/client/dashboard"
+          element={
+            <DashboardLayout>
+              <ClientForm />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/client/:clientId/keys"
+          element={
+            <DashboardLayout>
+              <ClientKeysView />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/key/dashboard"
+          element={
+            <DashboardLayout>
+              <KeyForm />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/key/inactive"
+          element={
+            <DashboardLayout>
+              <InactiveKeyList />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <DashboardLayout>
+              <KeyReports />
+            </DashboardLayout>
+          }
+        />
       </Routes>
     </div>
   );

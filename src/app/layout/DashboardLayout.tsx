@@ -1,9 +1,13 @@
-import { Outlet } from "react-router-dom";
 import Sidebar from "../../components/layout/Sidebar";
 import TopNav from "../../components/layout/TopNav";
 import { useState } from "react";
+import type { ReactNode } from "react";
 
-function DashboardLayout() {
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleToggleSidebar = () => {
@@ -20,9 +24,7 @@ function DashboardLayout() {
         className="transition-all duration-300 ease-in-out min-h-screen pt-12"
         style={{ marginLeft: isSidebarCollapsed ? "64px" : "256px" }}
       >
-        <div className="p-0">
-          <Outlet />
-        </div>
+        <div className="p-0">{children}</div>
       </main>
     </div>
   );
