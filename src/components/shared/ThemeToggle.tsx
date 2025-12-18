@@ -20,12 +20,12 @@ export default function ThemeToggle() {
       title={`Cambiar a tema ${theme === "light" ? "oscuro" : "claro"}`}
     >
       {/* Icon */}
-      <div className="relative z-10 transition-transform duration-300 group-hover:scale-110 text-gray-400">
+      <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
         {theme === "light" ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
       </div>
 
       {/* Label */}
-      <span className="relative z-10 font-medium text-sm text-gray-400">
+      <span className="relative z-10 font-medium text-sm">
         {theme === "light" ? "Modo Oscuro" : "Modo Claro"}
       </span>
 

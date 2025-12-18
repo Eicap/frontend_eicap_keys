@@ -123,10 +123,10 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
               {!isCollapsed && (
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className="w-full flex  items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group mb-2
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group mb-2
                     bg-gray-100 dark:bg-sidebar-accent/50 
                     hover:bg-gray-200 dark:hover:bg-sidebar-accent
-                    text-white dark:text-sidebar-foreground/60 
+                    text-black dark:text-sidebar-foreground/60 
                     hover:text-gray-900 dark:hover:text-sidebar-foreground"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wider">{section.title}</span>

@@ -129,7 +129,7 @@ export default function InactiveKeyList() {
       case "active":
         return {
           bg: "bg-green-500/10",
-          text: "text-green-400",
+          text: "text-green-700 dark:text-green-400",
           border: "border-green-500/30",
           icon: <Zap className="w-3 h-3" />,
           label: "Activo",
@@ -137,7 +137,7 @@ export default function InactiveKeyList() {
       case "inactive":
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: "Inactivo",
@@ -145,7 +145,7 @@ export default function InactiveKeyList() {
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: state,
@@ -158,21 +158,21 @@ export default function InactiveKeyList() {
       case "empresarial":
         return {
           bg: "bg-purple-500/10",
-          text: "text-purple-400",
+          text: "text-purple-700 dark:text-purple-400",
           border: "border-purple-500/30",
           icon: <Building2 className="w-3 h-3" />,
         };
       case "estudiantil":
         return {
           bg: "bg-blue-500/10",
-          text: "text-blue-400",
+          text: "text-blue-700 dark:text-blue-400",
           border: "border-blue-500/30",
           icon: <GraduationCap className="w-3 h-3" />,
         };
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Key className="w-3 h-3" />,
         };
@@ -208,8 +208,8 @@ export default function InactiveKeyList() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-500/10 border border-gray-500/30">
-            <Shield className="w-5 h-5 text-gray-400" />
-            <span className="text-gray-400 font-semibold">{filteredKeys.length} Keys Disponibles</span>
+            <Shield className="w-5 h-5 text-gray-700 dark:text-gray-400" />
+            <span className="text-gray-700 dark:text-gray-400 font-semibold">{filteredKeys.length} Keys Disponibles</span>
           </div>
           <button
             onClick={() => setShowBulkDialog(true)}
@@ -297,14 +297,14 @@ export default function InactiveKeyList() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleEdit(key.id)}
-                            className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
+                            className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
                             title="Editar"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(key.id)}
-                            className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+                            className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-500 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
                             title="Eliminar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -341,14 +341,14 @@ export default function InactiveKeyList() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(key.id)}
-                      className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-all"
+                      className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20 transition-all"
                       title="Editar"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(key.id)}
-                      className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-all"
+                      className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-500 hover:bg-red-500/20 transition-all"
                       title="Eliminar"
                     >
                       <Trash2 className="w-4 h-4" />

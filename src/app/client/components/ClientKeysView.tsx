@@ -55,7 +55,7 @@ export default function ClientKeysView() {
       case "active":
         return {
           bg: "bg-green-500/10",
-          text: "text-green-400",
+          text: "text-green-700 dark:text-green-400",
           border: "border-green-500/30",
           icon: <Zap className="w-3 h-3" />,
           label: "Activo",
@@ -63,7 +63,7 @@ export default function ClientKeysView() {
       case "inactive":
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: "Inactivo",
@@ -71,7 +71,7 @@ export default function ClientKeysView() {
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: state,
@@ -84,21 +84,21 @@ export default function ClientKeysView() {
       case "empresarial":
         return {
           bg: "bg-purple-500/10",
-          text: "text-purple-400",
+          text: "text-purple-700 dark:text-purple-400",
           border: "border-purple-500/30",
           icon: <Building2 className="w-3 h-3" />,
         };
       case "estudiantil":
         return {
           bg: "bg-blue-500/10",
-          text: "text-blue-400",
+          text: "text-blue-700 dark:text-blue-400",
           border: "border-blue-500/30",
           icon: <GraduationCap className="w-3 h-3" />,
         };
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <KeyIcon className="w-3 h-3" />,
         };
@@ -271,7 +271,7 @@ export default function ClientKeysView() {
                             </span>
                           ))}
                           {key.permissions.length > 2 && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs bg-gray-500/10 text-gray-400 border border-gray-500/20">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs bg-gray-500/10 text-gray-700 dark:text-gray-400 border border-gray-500/20">
                               +{key.permissions.length - 2}
                             </span>
                           )}

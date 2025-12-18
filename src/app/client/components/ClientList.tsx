@@ -87,7 +87,7 @@ export default function ClientList() {
       {isLoading ? (
         <div className="text-center py-16">
           <div className="inline-block animate-spin">
-            <div className="w-8 h-8 border-4 border-gray-600 border-t-[#254181] rounded-full"></div>
+            <div className="w-8 h-8 border-4 border-muted border-t-[#254181] rounded-full"></div>
           </div>
           <p className="text-muted-foreground mt-4">Cargando clientes...</p>
         </div>
@@ -114,21 +114,21 @@ export default function ClientList() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => navigate(`/client/${client.id}/keys`)}
-                        className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/30 transition-all"
+                        className="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-700 dark:text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/30 transition-all"
                         title="Ver Keys"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleEdit(client.id)}
-                        className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
+                        className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
                         title="Editar"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(client.id)}
-                        className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+                        className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-500 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
                         title="Eliminar"
                       >
                         <Trash2 className="w-4 h-4" />

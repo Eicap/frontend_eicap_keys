@@ -40,7 +40,7 @@ export default function KeyList() {
       case "active":
         return {
           bg: "bg-green-500/10",
-          text: "text-green-400",
+          text: "text-green-700 dark:text-green-400",
           border: "border-green-500/30",
           icon: <Zap className="w-3 h-3" />,
           label: "Activo",
@@ -48,7 +48,7 @@ export default function KeyList() {
       case "inactive":
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: "Inactivo",
@@ -56,7 +56,7 @@ export default function KeyList() {
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: state,
@@ -69,21 +69,21 @@ export default function KeyList() {
       case "empresarial":
         return {
           bg: "bg-purple-500/10",
-          text: "text-purple-400",
+          text: "text-purple-700 dark:text-purple-400",
           border: "border-purple-500/30",
           icon: <Building2 className="w-3 h-3" />,
         };
       case "estudiantil":
         return {
           bg: "bg-blue-500/10",
-          text: "text-blue-400",
+          text: "text-blue-700 dark:text-blue-400",
           border: "border-blue-500/30",
           icon: <GraduationCap className="w-3 h-3" />,
         };
       default:
         return {
           bg: "bg-gray-500/10",
-          text: "text-gray-400",
+          text: "text-gray-700 dark:text-gray-400",
           border: "border-gray-500/30",
           icon: <Key className="w-3 h-3" />,
         };
@@ -103,7 +103,7 @@ export default function KeyList() {
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Cargando keys...</p>
+          <p className="text-muted-foreground">Cargando keys...</p>
         </div>
       </div>
     );
@@ -114,8 +114,8 @@ export default function KeyList() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Keys</h1>
-          <p className="text-gray-400">Administra las licencias y claves de acceso</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Keys</h1>
+          <p className="text-muted-foreground">Administra las licencias y claves de acceso</p>
         </div>
         <ActionButton onClick={() => setIsModalOpen(true)} icon={Plus} label="Nueva Key" variant="create" />
       </div>
@@ -138,8 +138,8 @@ export default function KeyList() {
             <div
               key={key.id}
               className="
-                group relative bg-[#1a1a1a] rounded-xl p-6
-                border border-gray-800 hover:border-[#254181]
+                group relative bg-card rounded-xl p-6
+                border border-border hover:border-[#254181]
                 transition-all duration-300
                 hover:shadow-lg hover:shadow-[#254181]/20
               "
@@ -154,14 +154,14 @@ export default function KeyList() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(key.id)}
-                      className="p-2 rounded-lg bg-gray-800 text-blue-400 hover:bg-gray-700 hover:text-blue-300 transition-all"
+                      className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
                       title="Editar"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(key.id)}
-                      className="p-2 rounded-lg bg-gray-800 text-red-400 hover:bg-gray-700 hover:text-red-300 transition-all"
+                      className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-700 dark:text-red-500 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
                       title="Eliminar"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -170,9 +170,9 @@ export default function KeyList() {
                 </div>
 
                 {/* Code */}
-                <div className="mb-4 p-3 rounded-lg bg-gray-800/50 border border-gray-700">
-                  <p className="text-xs text-gray-500 mb-1 font-medium">Código</p>
-                  <p className="font-mono text-sm font-bold text-white break-all">{key.code}</p>
+                <div className="mb-4 p-3 rounded-lg bg-muted/50 border border-border">
+                  <p className="text-xs text-muted-foreground mb-1 font-medium">Código</p>
+                  <p className="font-mono text-sm font-bold text-card-foreground break-all">{key.code}</p>
                 </div>
 
                 {/* Badges */}
@@ -205,7 +205,7 @@ export default function KeyList() {
                 {/* Permissions */}
                 {key.permissions && key.permissions.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-500 mb-2 font-medium">Permisos</p>
+                    <p className="text-xs text-muted-foreground mb-2 font-medium">Permisos</p>
                     <div className="flex flex-wrap gap-1.5">
                       {key.permissions.map((permission) => (
                         <span
@@ -221,22 +221,22 @@ export default function KeyList() {
 
                 {/* Dates */}
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/50">
-                    <Calendar className="w-4 h-4 text-blue-400" />
-                    <span className="text-xs font-medium text-gray-400">Inicio:</span>
-                    <span className="text-xs font-semibold text-blue-400">{formatDate(key.init_date)}</span>
+                  <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                    <Calendar className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                    <span className="text-xs font-medium text-muted-foreground">Inicio:</span>
+                    <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">{formatDate(key.init_date)}</span>
                   </div>
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/50">
-                    <Shield className="w-4 h-4 text-red-400" />
-                    <span className="text-xs font-medium text-gray-400">Expira:</span>
-                    <span className="text-xs font-semibold text-red-400">{formatDate(key.due_date)}</span>
+                  <div className="flex items-center gap-2 p-2 rounded-lg bg-muted/50">
+                    <Shield className="w-4 h-4 text-red-500 dark:text-red-400" />
+                    <span className="text-xs font-medium text-muted-foreground">Expira:</span>
+                    <span className="text-xs font-semibold text-red-700 dark:text-red-400">{formatDate(key.due_date)}</span>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="pt-4 border-t border-gray-800 flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Creado: {formatDate(key.created_at)}</span>
-                  {key.user_name && <span className="text-xs text-gray-500">Por: {key.user_name}</span>}
+                <div className="pt-4 border-t border-border flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">Creado: {formatDate(key.created_at)}</span>
+                  {key.user_name && <span className="text-xs text-muted-foreground">Por: {key.user_name}</span>}
                 </div>
               </div>
             </div>
@@ -250,8 +250,8 @@ export default function KeyList() {
           <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center shadow-xl">
             <Key className="w-12 h-12 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-2">No se encontraron keys</h3>
-          <p className="text-gray-400 mb-6">
+          <h3 className="text-xl font-bold text-foreground mb-2">No se encontraron keys</h3>
+          <p className="text-muted-foreground mb-6">
             {searchQuery ? "Intenta con otro término de búsqueda" : "Comienza agregando tu primera key"}
           </p>
           {!searchQuery && (
