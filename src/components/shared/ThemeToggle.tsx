@@ -25,12 +25,10 @@ export default function ThemeToggle() {
       </div>
 
       {/* Label */}
-      <span className="relative z-10 font-medium text-sm">
-        {theme === "light" ? "Modo Oscuro" : "Modo Claro"}
-      </span>
+      <span className="relative z-10 font-medium text-sm">{theme === "light" ? "Modo Oscuro" : "Modo Claro"}</span>
 
       {/* Hover effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#254181]/10 to-[#3d5fa3]/10 dark:from-[#254181]/20 dark:to-[#3d5fa3]/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+      <div className="absolute inset-0 bg-linear-to-r from-[#254181]/10 to-[#3d5fa3]/10 dark:from-[#254181]/20 dark:to-[#3d5fa3]/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
     </button>
   );
 }
