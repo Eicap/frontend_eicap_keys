@@ -1,34 +1,47 @@
 import { useEffect, useState } from "react";
 import { useKeyStore } from "../../../store/useKeyStore";
-import { Plus, Edit2, Trash2, Key, Eye, ChevronLeft, ChevronRight, Loader2, Building2, GraduationCap, Zap, Shield } from "lucide-react";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Key,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  Building2,
+  GraduationCap,
+  Zap,
+  Shield,
+} from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import KeyModal from "./KeyModal";
 
 export default function KeyList() {
-  const { 
+  const {
     keys,
-    getFilteredKeys, 
-    searchQuery, 
-    setSearchQuery, 
-    deleteKey, 
-    fetchKeys, 
+    getFilteredKeys,
+    searchQuery,
+    setSearchQuery,
+    deleteKey,
+    fetchKeys,
     isLoading,
     totalKeys,
-    currentPage: storePage,
+    // currentPage: storePage,
     itemsPerPage,
-    totalPages
+    totalPages,
   } = useKeyStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [viewingKey, setViewingKey] = useState<string | null>(null);
-  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view'>('create');
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
   const [currentPage, setCurrentPage] = useState(1);
 
   // Use filtered keys for display (client-side search)
   const displayKeys = searchQuery ? getFilteredKeys() : keys;
-  
+
   // Calculate pagination info
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -49,13 +62,13 @@ export default function KeyList() {
 
   const handleView = (keyId: string) => {
     setViewingKey(keyId);
-    setModalMode('view');
+    setModalMode("view");
     setIsModalOpen(true);
   };
 
   const handleEdit = (keyId: string) => {
     setEditingKey(keyId);
-    setModalMode('edit');
+    setModalMode("edit");
     setIsModalOpen(true);
   };
 
@@ -69,13 +82,13 @@ export default function KeyList() {
     setIsModalOpen(false);
     setEditingKey(null);
     setViewingKey(null);
-    setModalMode('create');
+    setModalMode("create");
   };
 
   const handleCreateNew = () => {
     setEditingKey(null);
     setViewingKey(null);
-    setModalMode('create');
+    setModalMode("create");
     setIsModalOpen(true);
   };
 
@@ -208,31 +221,25 @@ export default function KeyList() {
               <tbody className="divide-y divide-border">
                 {displayKeys.map((key, index) => {
                   const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
-                  
+
                   return (
                     <tr
                       key={key.id}
                       className={`
                         transition-colors hover:bg-muted/30
-                        ${index % 2 === 0 ? 'bg-card' : 'bg-muted/10'}
+                        ${index % 2 === 0 ? "bg-card" : "bg-muted/10"}
                       `}
                     >
                       {/* Código */}
                       <td className="px-4 py-3">
-                        <span className="font-mono text-sm font-semibold text-card-foreground">
-                          {key.code}
-                        </span>
+                        <span className="font-mono text-sm font-semibold text-card-foreground">{key.code}</span>
                       </td>
 
                       {/* Tipo */}
-                      <td className="px-4 py-3">
-                        {getKeyTypeBadge(key.key_type.name)}
-                      </td>
+                      <td className="px-4 py-3">{getKeyTypeBadge(key.key_type.name)}</td>
 
                       {/* Estado */}
-                      <td className="px-4 py-3">
-                        {getStatusBadge(key.state)}
-                      </td>
+                      <td className="px-4 py-3">{getStatusBadge(key.state)}</td>
 
                       {/* Cliente */}
                       <td className="px-4 py-3">
@@ -371,12 +378,7 @@ export default function KeyList() {
       )}
 
       {/* Modal */}
-      <KeyModal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
-        keyId={editingKey || viewingKey} 
-        mode={modalMode}
-      />
+      <KeyModal isOpen={isModalOpen} onClose={handleCloseModal} keyId={editingKey || viewingKey} mode={modalMode} />
     </div>
   );
 }

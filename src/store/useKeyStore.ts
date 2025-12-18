@@ -16,12 +16,14 @@ export interface KeyStore {
   itemsPerPage: number;
   totalPages: number;
   keysCache: Record<number, Key[]>;
-  inactiveKeysCache: Key[] | null;
-  lastInactiveFetch: number | null;
+  inactiveKeysCache: Record<number, Key[]>;
+  totalInactiveKeys: number;
+  currentInactivePage: number;
+  totalInactivePages: number;
 
   // Actions
   fetchKeys: (limit?: number, offset?: number, forceRefresh?: boolean) => Promise<void>;
-  fetchInactiveKeys: (forceRefresh?: boolean) => Promise<void>;
+  fetchInactiveKeys: (limit?: number, offset?: number, forceRefresh?: boolean) => Promise<void>;
   fetchKeyTypes: () => Promise<void>;
   fetchPermissions: () => Promise<void>;
   fetchClients: () => Promise<void>;
@@ -57,17 +59,19 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
   itemsPerPage: 10,
   totalPages: 0,
   keysCache: {},
-  inactiveKeysCache: null,
-  lastInactiveFetch: null,
+  inactiveKeysCache: {},
+  totalInactiveKeys: 0,
+  currentInactivePage: 1,
+  totalInactivePages: 0,
 
   fetchKeys: async (limit = 10, offset = 0, forceRefresh = false) => {
     try {
       const pageNumber = Math.floor(offset / limit) + 1;
       const { keysCache } = get();
-      
+
       // Si ya tenemos los datos en caché y no es un refresh forzado, usarlos
       if (!forceRefresh && keysCache[pageNumber]) {
-        set({ 
+        set({
           keys: keysCache[pageNumber],
           currentPage: pageNumber,
         });
@@ -76,19 +80,20 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
 
       set({ isLoading: true });
       const response = await keyService.getKeys(limit, offset);
+      console.log("🤣🤣🤣", response);
       const { data, total, pages } = response.data;
-      
+
       // Guardar en caché
       const newCache = { ...keysCache, [pageNumber]: data };
-      
-      set({ 
-        keys: data, 
+
+      set({
+        keys: data,
         totalKeys: total,
         totalPages: pages,
         currentPage: pageNumber,
         itemsPerPage: limit,
         keysCache: newCache,
-        isLoading: false 
+        isLoading: false,
       });
     } catch (error) {
       console.error("Error fetching keys:", error);
@@ -96,26 +101,34 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
     }
   },
 
-  fetchInactiveKeys: async (forceRefresh = false) => {
-    const { inactiveKeysCache, lastInactiveFetch } = get();
-    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
-    const now = Date.now();
-
-    // Si hay caché válido y no es refresh forzado, usar caché
-    if (!forceRefresh && inactiveKeysCache && lastInactiveFetch && (now - lastInactiveFetch) < CACHE_DURATION) {
-      set({ inactiveKeys: inactiveKeysCache });
-      return;
-    }
-
+  fetchInactiveKeys: async (limit = 10, offset = 0, forceRefresh = false) => {
     try {
+      const pageNumber = Math.floor(offset / limit) + 1;
+      const { inactiveKeysCache } = get();
+
+      // Si ya tenemos los datos en caché y no es un refresh forzado, usarlos
+      if (!forceRefresh && inactiveKeysCache[pageNumber]) {
+        set({
+          inactiveKeys: inactiveKeysCache[pageNumber],
+          currentInactivePage: pageNumber,
+        });
+        return;
+      }
+
       set({ isLoading: true });
-      const response = await keyService.getKeysInactive();
-      const inactiveData = response.data.data;
-      set({ 
-        inactiveKeys: inactiveData,
-        inactiveKeysCache: inactiveData,
-        lastInactiveFetch: now,
-        isLoading: false 
+      const response = await keyService.getKeysInactive(limit, offset);
+      const { data, total, pages } = response.data;
+
+      // Guardar en caché
+      const newCache = { ...inactiveKeysCache, [pageNumber]: data };
+
+      set({
+        inactiveKeys: data,
+        totalInactiveKeys: total,
+        totalInactivePages: pages,
+        currentInactivePage: pageNumber,
+        inactiveKeysCache: newCache,
+        isLoading: false,
       });
     } catch (error) {
       console.error("Error fetching inactive keys:", error);
@@ -211,6 +224,9 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
     try {
       set({ isLoading: true });
       await keyService.createKeys({ quantity });
+      // Limpiar caché de keys inactivas
+      set({ inactiveKeysCache: {} });
+      await get().fetchInactiveKeys(get().itemsPerPage, 0, true);
       set({ isLoading: false });
     } catch (error) {
       console.error("Error creating bulk keys:", error);

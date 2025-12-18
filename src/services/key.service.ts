@@ -19,16 +19,19 @@ export const keyService = {
   getPermissions: () => axiosInstance.get<PermissionListResponse>("/permissions"),
 
   // Get all keys
-  getKeys: (limit?: number, offset?: number) => 
+  getKeys: (limit?: number, offset?: number) =>
     axiosInstance.get<KeyListResponse>(`/keys`, {
-      params: { limit, offset }
+      params: { limit, offset },
     }),
 
   getKeysByClient: (clientId: string) => axiosInstance.get<Key[]>(`/keys/client/${clientId}`),
 
   generateKeyCode: () => axiosInstance.post<GenerateCodeResponse>("/keys/generate"),
 
-  getKeysInactive: () => axiosInstance.get<KeyListResponse>(`/keys/inactive`),
+  getKeysInactive: (limit?: number, offset?: number) =>
+    axiosInstance.get<KeyListResponse>(`/keys/inactive`, {
+      params: { limit, offset },
+    }),
 
   createKeys: (data: GenerateKeysInput) => axiosInstance.post<KeyResponse>("/keys/bulk", data),
 

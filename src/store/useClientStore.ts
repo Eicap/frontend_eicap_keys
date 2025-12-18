@@ -51,7 +51,7 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     const now = Date.now();
 
     // Si hay caché válido y no es refresh forzado, usar caché
-    if (!forceRefresh && clientsCache && lastFetch && (now - lastFetch) < CACHE_DURATION) {
+    if (!forceRefresh && clientsCache && lastFetch && now - lastFetch < CACHE_DURATION) {
       set({ clients: clientsCache });
       return;
     }
@@ -60,10 +60,10 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     try {
       const response = await clientService.getClients();
       const clientsData = response.data.data;
-      set({ 
+      set({
         clients: clientsData,
         clientsCache: clientsData,
-        lastFetch: now
+        lastFetch: now,
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al cargar clientes";
