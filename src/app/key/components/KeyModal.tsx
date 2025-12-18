@@ -9,7 +9,7 @@ interface KeyModalProps {
   isOpen: boolean;
   onClose: () => void;
   keyId?: string | null;
-  mode?: 'create' | 'edit' | 'view';
+  mode?: "create" | "edit" | "view";
 }
 
 interface KeyFormData {
@@ -22,7 +22,7 @@ interface KeyFormData {
   permissions?: string[];
 }
 
-export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: KeyModalProps) {
+export default function KeyModal({ isOpen, onClose, keyId, mode = "create" }: KeyModalProps) {
   const {
     keys,
     inactiveKeys,
@@ -165,7 +165,7 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
   };
 
   const isEmpresarial = selectedKeyType === "empresarial";
-  const isViewMode = mode === 'view';
+  const isViewMode = mode === "view";
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES", {
@@ -187,7 +187,11 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                 {isViewMode ? "Detalles de la Key" : keyId ? "Editar Key" : "Nueva Key"}
               </Dialog.Title>
               <Dialog.Description className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {isViewMode ? "Información completa de la key" : keyId ? "Modifica los datos de la key" : "Completa el formulario para crear una nueva key"}
+                {isViewMode
+                  ? "Información completa de la key"
+                  : keyId
+                  ? "Modifica los datos de la key"
+                  : "Completa el formulario para crear una nueva key"}
               </Dialog.Description>
             </div>
             <Dialog.Close asChild>
@@ -213,15 +217,21 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                 {/* Tipo y Estado */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Key</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Tipo de Key
+                    </label>
                     <div className="px-4 py-3 rounded-lg bg-muted/50 border border-border">
-                      <span className="text-base font-semibold text-card-foreground capitalize">{key.key_type.name}</span>
+                      <span className="text-base font-semibold text-card-foreground capitalize">
+                        {key.key_type.name}
+                      </span>
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Estado</label>
                     <div className="px-4 py-3 rounded-lg bg-muted/50 border border-border">
-                      <span className="text-base font-semibold text-card-foreground capitalize">{key.state === 'active' ? 'Activo' : 'Inactivo'}</span>
+                      <span className="text-base font-semibold text-card-foreground capitalize">
+                        {key.state === "active" ? "Activo" : "Inactivo"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -231,7 +241,9 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cliente</label>
                     <div className="px-4 py-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                      <span className="text-base font-semibold text-purple-700 dark:text-purple-400">{key.client.name}</span>
+                      <span className="text-base font-semibold text-purple-700 dark:text-purple-400">
+                        {key.client.name}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -239,15 +251,23 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                 {/* Fechas */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de Inicio</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Fecha de Inicio
+                    </label>
                     <div className="px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
-                      <span className="text-base font-semibold text-blue-700 dark:text-blue-400">{formatDate(key.init_date)}</span>
+                      <span className="text-base font-semibold text-blue-700 dark:text-blue-400">
+                        {formatDate(key.init_date)}
+                      </span>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fecha de Expiración</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Fecha de Expiración
+                    </label>
                     <div className="px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30">
-                      <span className="text-base font-semibold text-red-700 dark:text-red-400">{formatDate(key.due_date)}</span>
+                      <span className="text-base font-semibold text-red-700 dark:text-red-400">
+                        {formatDate(key.due_date)}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -274,7 +294,9 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-600 dark:text-gray-400">Creado:</span>
-                      <span className="ml-2 font-medium text-gray-900 dark:text-white">{formatDate(key.created_at)}</span>
+                      <span className="ml-2 font-medium text-gray-900 dark:text-white">
+                        {formatDate(key.created_at)}
+                      </span>
                     </div>
                     {key.user_name && (
                       <div>
@@ -288,216 +310,218 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
             ) : (
               /* Edit/Create Mode - Form */
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" id="key-form">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Code */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Código <span className="text-accent">*</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      {...register("code", {
-                        required: "El código es requerido",
-                        minLength: {
-                          value: 3,
-                          message: "El código debe tener al menos 3 caracteres",
-                        },
-                      })}
-                      className={`
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Code */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Código <span className="text-accent">*</span>
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        {...register("code", {
+                          required: "El código es requerido",
+                          minLength: {
+                            value: 3,
+                            message: "El código debe tener al menos 3 caracteres",
+                          },
+                        })}
+                        className={`
                         flex-1 px-4 py-3 rounded-lg border-2 font-mono
                         bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                         ${errors.code ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                         focus:border-primary focus:ring-4 focus:ring-primary/10
                         outline-none transition-all
                       `}
-                      placeholder="Ej: Eee-t98"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleGenerateCode}
-                      disabled={isGenerating}
-                      className="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                      title="Generar código automáticamente"
-                    >
-                      <RefreshCw className={`w-5 h-5 ${isGenerating ? "animate-spin" : ""}`} />
-                      {isGenerating ? "Generando..." : "Generar"}
-                    </button>
+                        placeholder="Ej: Eee-t98"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleGenerateCode}
+                        disabled={isGenerating}
+                        className="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        title="Generar código automáticamente"
+                      >
+                        <RefreshCw className={`w-5 h-5 ${isGenerating ? "animate-spin" : ""}`} />
+                        {isGenerating ? "Generando..." : "Generar"}
+                      </button>
+                    </div>
+                    {errors.code && (
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.code.message}</p>
+                    )}
                   </div>
-                  {errors.code && (
-                    <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.code.message}</p>
-                  )}
-                </div>
 
-                {/* Key Type */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Tipo de Key <span className="text-accent">*</span>
-                  </label>
-                  <select
-                    {...register("key_type_id", {
-                      required: "El tipo de key es requerido",
-                    })}
-                    className={`
+                  {/* Key Type */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Tipo de Key <span className="text-accent">*</span>
+                    </label>
+                    <select
+                      {...register("key_type_id", {
+                        required: "El tipo de key es requerido",
+                      })}
+                      className={`
                       w-full px-4 py-3 rounded-lg border-2
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       ${errors.key_type_id ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                       focus:border-primary focus:ring-4 focus:ring-primary/10
                       outline-none transition-all
                     `}
-                  >
-                    <option value="">Selecciona un tipo</option>
-                    {keyTypes.map((type) => (
-                      <option key={type.id} value={type.id}>
-                        {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.key_type_id && (
-                    <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
-                      {errors.key_type_id.message}
-                    </p>
-                  )}
-                </div>
+                    >
+                      <option value="">Selecciona un tipo</option>
+                      {keyTypes.map((type) => (
+                        <option key={type.id} value={type.id}>
+                          {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.key_type_id && (
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
+                        {errors.key_type_id.message}
+                      </p>
+                    )}
+                  </div>
 
-                {/* Client - Only for empresarial */}
-                {isEmpresarial && (
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Cliente <span className="text-accent">*</span>
-                    </label>
-                    <select
-                      {...register("client_id", {
-                        required: isEmpresarial ? "El cliente es requerido para keys empresariales" : false,
-                      })}
-                      className={`
+                  {/* Client - Only for empresarial */}
+                  {isEmpresarial && (
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Cliente <span className="text-accent">*</span>
+                      </label>
+                      <select
+                        {...register("client_id", {
+                          required: isEmpresarial ? "El cliente es requerido para keys empresariales" : false,
+                        })}
+                        className={`
                         w-full px-4 py-3 rounded-lg border-2
                         bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                         ${errors.client_id ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                         focus:border-primary focus:ring-4 focus:ring-primary/10
                         outline-none transition-all
                       `}
-                    >
-                      <option value="">Selecciona un cliente</option>
-                      {clients.map((client) => (
-                        <option key={client.id} value={client.id}>
-                          {client.name}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.client_id && (
-                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
-                        {errors.client_id.message}
-                      </p>
-                    )}
-                  </div>
-                )}
+                      >
+                        <option value="">Selecciona un cliente</option>
+                        {clients.map((client) => (
+                          <option key={client.id} value={client.id}>
+                            {client.name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.client_id && (
+                        <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
+                          {errors.client_id.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
-                {/* Fecha Inicio */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Fecha de Inicio <span className="text-accent">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    {...register("init_date", {
-                      required: "La fecha de inicio es requerida",
-                    })}
-                    className={`
+                  {/* Fecha Inicio */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Fecha de Inicio <span className="text-accent">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      {...register("init_date", {
+                        required: "La fecha de inicio es requerida",
+                      })}
+                      className={`
                       w-full px-4 py-3 rounded-lg border-2
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       ${errors.init_date ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                       focus:border-primary focus:ring-4 focus:ring-primary/10
                       outline-none transition-all
                     `}
-                  />
-                  {errors.init_date && (
-                    <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
-                      {errors.init_date.message}
-                    </p>
-                  )}
-                </div>
+                    />
+                    {errors.init_date && (
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
+                        {errors.init_date.message}
+                      </p>
+                    )}
+                  </div>
 
-                {/* Fecha Expiración */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Fecha de Expiración <span className="text-accent">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    {...register("due_date", {
-                      required: "La fecha de expiración es requerida",
-                    })}
-                    className={`
+                  {/* Fecha Expiración */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Fecha de Expiración <span className="text-accent">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      {...register("due_date", {
+                        required: "La fecha de expiración es requerida",
+                      })}
+                      className={`
                       w-full px-4 py-3 rounded-lg border-2
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       ${errors.due_date ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                       focus:border-primary focus:ring-4 focus:ring-primary/10
                       outline-none transition-all
                     `}
-                  />
-                  {errors.due_date && (
-                    <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.due_date.message}</p>
-                  )}
-                </div>
+                    />
+                    {errors.due_date && (
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">
+                        {errors.due_date.message}
+                      </p>
+                    )}
+                  </div>
 
-                {/* Estado */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Estado <span className="text-accent">*</span>
-                  </label>
-                  <select
-                    {...register("state", {
-                      required: "El estado es requerido",
-                    })}
-                    className={`
+                  {/* Estado */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Estado <span className="text-accent">*</span>
+                    </label>
+                    <select
+                      {...register("state", {
+                        required: "El estado es requerido",
+                      })}
+                      className={`
                       w-full px-4 py-3 rounded-lg border-2
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                       ${errors.state ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                       focus:border-primary focus:ring-4 focus:ring-primary/10
                       outline-none transition-all
                     `}
-                  >
-                    <option value="active">Activo</option>
-                    <option value="inactive">Inactivo</option>
-                  </select>
-                  {errors.state && (
-                    <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.state.message}</p>
-                  )}
-                </div>
-
-                {/* Permissions - Only for empresarial */}
-                {isEmpresarial && (
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                      Permisos <span className="text-accent">*</span>
-                    </label>
-                    <div className="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700">
-                      {permissions.map((permission) => (
-                        <label
-                          key={permission.id}
-                          className="flex items-center gap-3 p-3 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary cursor-pointer transition-all"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={selectedPermissions.includes(permission.id)}
-                            onChange={() => handlePermissionToggle(permission.id)}
-                            className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary cursor-pointer"
-                          />
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            {permission.name.charAt(0).toUpperCase() + permission.name.slice(1)}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                    {isEmpresarial && selectedPermissions.length === 0 && (
-                      <p className="mt-2 text-sm text-amber-600 dark:text-amber-500">
-                        Se recomienda seleccionar al menos un permiso
-                      </p>
+                    >
+                      <option value="active">Activo</option>
+                      <option value="inactive">Inactivo</option>
+                    </select>
+                    {errors.state && (
+                      <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.state.message}</p>
                     )}
                   </div>
-                )}
-              </div>
-            </form>
+
+                  {/* Permissions - Only for empresarial */}
+                  {isEmpresarial && (
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        Permisos <span className="text-accent">*</span>
+                      </label>
+                      <div className="grid grid-cols-2 gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border-2 border-gray-200 dark:border-gray-700">
+                        {permissions.map((permission) => (
+                          <label
+                            key={permission.id}
+                            className="flex items-center gap-3 p-3 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary cursor-pointer transition-all"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedPermissions.includes(permission.id)}
+                              onChange={() => handlePermissionToggle(permission.id)}
+                              className="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary cursor-pointer"
+                            />
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                              {permission.name.charAt(0).toUpperCase() + permission.name.slice(1)}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                      {isEmpresarial && selectedPermissions.length === 0 && (
+                        <p className="mt-2 text-sm text-amber-600 dark:text-amber-500">
+                          Se recomienda seleccionar al menos un permiso
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </form>
             )}
           </div>
 

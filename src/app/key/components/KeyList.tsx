@@ -191,30 +191,30 @@ export default function KeyList() {
           <div className="overflow-auto rounded-xl border border-border bg-card shadow-sm max-h-[calc(100vh-320px)] relative">
             <table className="w-full min-w-200">
               {/* Table Header */}
-              <thead className="bg-muted/50 border-b border-border sticky top-0 z-10">
+              <thead className="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-b-2 border-slate-300 dark:border-slate-600 sticky top-0 z-10">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Código
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Estado
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Permisos
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Fecha Inicio
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Fecha Expiración
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
