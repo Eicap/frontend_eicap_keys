@@ -1,6 +1,19 @@
 import { useEffect, useState } from "react";
 import { useKeyStore } from "../../../store/useKeyStore";
-import { Plus, Edit2, Trash2, Key, Calendar, Shield, Zap, Building2, GraduationCap, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Key,
+  Calendar,
+  Shield,
+  Zap,
+  Building2,
+  GraduationCap,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import KeyModal from "./KeyModal";
@@ -10,8 +23,21 @@ export default function KeyList() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   const keys = getFilteredKeys();
+
+  // Pagination
+  const totalPages = Math.ceil(keys.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentKeys = keys.slice(startIndex, endIndex);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   // Fetch keys on component mount
   useEffect(() => {
@@ -110,7 +136,7 @@ export default function KeyList() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -127,41 +153,169 @@ export default function KeyList() {
         placeholder="Buscar por código, tipo, estado, cliente o permisos..."
       />
 
-      {/* Keys Grid - Scrollable */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 max-h-[calc(100vh-350px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
-        {keys.map((key) => {
-          const statusConfig = getStatusConfig(key.state);
-          const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
-          const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
+      {/* Table Container - Responsive */}
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border bg-muted/50">
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Código</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Tipo</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Estado</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Cliente</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Permisos</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Fecha Inicio</th>
+                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Fecha Expiración</th>
+                <th className="text-right p-4 text-sm font-semibold text-muted-foreground">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentKeys.map((key) => {
+                const statusConfig = getStatusConfig(key.state);
+                const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
+                const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
 
-          return (
-            <div
-              key={key.id}
-              className="
-                group relative bg-card rounded-xl p-6
-                border border-border hover:border-[#254181]
-                transition-all duration-300
-                hover:shadow-lg hover:shadow-[#254181]/20
-              "
-            >
-              {/* Content */}
-              <div className="relative z-10">
+                return (
+                  <tr key={key.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                    {/* Code */}
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center text-white shadow-md flex-shrink-0">
+                          <Key className="w-5 h-5" />
+                        </div>
+                        <span className="font-mono text-sm font-semibold text-card-foreground">{key.code}</span>
+                      </div>
+                    </td>
+
+                    {/* Key Type */}
+                    <td className="p-4">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border}`}
+                      >
+                        {keyTypeConfig.icon}
+                        {key.key_type.name.charAt(0).toUpperCase() + key.key_type.name.slice(1)}
+                      </span>
+                    </td>
+
+                    {/* Status */}
+                    <td className="p-4">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}
+                      >
+                        {statusConfig.icon}
+                        {statusConfig.label}
+                      </span>
+                    </td>
+
+                    {/* Client */}
+                    <td className="p-4">
+                      {isEmpresarial && key.client_name ? (
+                        <div className="flex items-center gap-1.5 text-sm text-purple-400">
+                          <Building2 className="w-4 h-4" />
+                          <span className="font-medium">{key.client_name}</span>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+
+                    {/* Permissions */}
+                    <td className="p-4">
+                      {key.permissions && key.permissions.length > 0 ? (
+                        <div className="flex flex-wrap gap-1 max-w-xs">
+                          {key.permissions.slice(0, 2).map((permission) => (
+                            <span
+                              key={permission.id}
+                              className="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                            >
+                              {permission.name}
+                            </span>
+                          ))}
+                          {key.permissions.length > 2 && (
+                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-muted text-muted-foreground">
+                              +{key.permissions.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Sin permisos</span>
+                      )}
+                    </td>
+
+                    {/* Init Date */}
+                    <td className="p-4">
+                      <div className="flex items-center gap-1.5 text-sm">
+                        <Calendar className="w-4 h-4 text-blue-500" />
+                        <span className="text-card-foreground">{formatDate(key.init_date)}</span>
+                      </div>
+                    </td>
+
+                    {/* Due Date */}
+                    <td className="p-4">
+                      <div className="flex items-center gap-1.5 text-sm">
+                        <Shield className="w-4 h-4 text-red-500" />
+                        <span className="text-card-foreground">{formatDate(key.due_date)}</span>
+                      </div>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="p-4">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => handleEdit(key.id)}
+                          className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
+                          title="Editar"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(key.id)}
+                          className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-4 p-4">
+          {currentKeys.map((key) => {
+            const statusConfig = getStatusConfig(key.state);
+            const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
+            const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
+
+            return (
+              <div key={key.id} className="bg-muted/50 rounded-lg p-4 border border-border space-y-3">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center text-white shadow-lg">
-                    <Key className="w-7 h-7" />
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center text-white shadow-md">
+                      <Key className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-mono text-sm font-semibold text-card-foreground">{key.code}</p>
+                      <p className="text-xs text-muted-foreground">Código</p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(key.id)}
-                      className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
+                      className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-all"
                       title="Editar"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(key.id)}
-                      className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+                      className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-all"
                       title="Eliminar"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -169,48 +323,39 @@ export default function KeyList() {
                   </div>
                 </div>
 
-                {/* Code */}
-                <div className="mb-4 p-3 rounded-lg bg-muted border border-border">
-                  <p className="text-xs text-muted-foreground mb-1 font-medium">Código</p>
-                  <p className="font-mono text-sm font-bold text-card-foreground break-all">{key.code}</p>
-                </div>
-
                 {/* Badges */}
-                <div className="flex gap-2 mb-4 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   <span
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} flex items-center gap-1.5`}
-                  >
-                    {statusConfig.icon}
-                    {statusConfig.label.toUpperCase()}
-                  </span>
-                  <span
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border} flex items-center gap-1.5`}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border}`}
                   >
                     {keyTypeConfig.icon}
-                    {key.key_type.name.toUpperCase()}
+                    {key.key_type.name.charAt(0).toUpperCase() + key.key_type.name.slice(1)}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}
+                  >
+                    {statusConfig.icon}
+                    {statusConfig.label}
                   </span>
                 </div>
 
-                {/* Client - Only for empresarial */}
+                {/* Client */}
                 {isEmpresarial && key.client_name && (
-                  <div className="mb-4 p-3 rounded-lg bg-purple-500/5 border border-purple-500/20">
-                    <p className="text-xs text-purple-400 mb-1 font-medium flex items-center gap-1.5">
-                      <Building2 className="w-3 h-3" />
-                      Cliente
-                    </p>
-                    <p className="text-sm font-semibold text-purple-300">{key.client_name}</p>
+                  <div className="flex items-center gap-1.5 text-sm text-purple-400">
+                    <Building2 className="w-4 h-4" />
+                    <span className="font-medium">{key.client_name}</span>
                   </div>
                 )}
 
                 {/* Permissions */}
                 {key.permissions && key.permissions.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-xs text-muted-foreground mb-2 font-medium">Permisos</p>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Permisos</p>
+                    <div className="flex flex-wrap gap-1">
                       {key.permissions.map((permission) => (
                         <span
                           key={permission.id}
-                          className="px-2 py-1 rounded-md text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                          className="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
                         >
                           {permission.name}
                         </span>
@@ -220,33 +365,83 @@ export default function KeyList() {
                 )}
 
                 {/* Dates */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-muted">
-                    <Calendar className="w-4 h-4 text-blue-500" />
-                    <span className="text-xs font-medium text-muted-foreground">Inicio:</span>
-                    <span className="text-xs font-semibold text-blue-500">{formatDate(key.init_date)}</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Calendar className="w-3 h-3 text-blue-500" />
+                    <div>
+                      <p className="text-muted-foreground">Inicio</p>
+                      <p className="font-medium text-card-foreground">{formatDate(key.init_date)}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-muted">
-                    <Shield className="w-4 h-4 text-red-500" />
-                    <span className="text-xs font-medium text-muted-foreground">Expira:</span>
-                    <span className="text-xs font-semibold text-red-500">{formatDate(key.due_date)}</span>
+                  <div className="flex items-center gap-1.5 text-xs">
+                    <Shield className="w-3 h-3 text-red-500" />
+                    <div>
+                      <p className="text-muted-foreground">Expira</p>
+                      <p className="font-medium text-card-foreground">{formatDate(key.due_date)}</p>
+                    </div>
                   </div>
-                </div>
-
-                {/* Footer */}
-                <div className="pt-4 border-t border-border flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">Creado: {formatDate(key.created_at)}</span>
-                  {key.user_name && <span className="text-xs text-muted-foreground">Por: {key.user_name}</span>}
                 </div>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between p-4 border-t border-border bg-muted/30">
+            <div className="text-sm text-muted-foreground">
+              Mostrando {startIndex + 1}-{Math.min(endIndex, keys.length)} de {keys.length} keys
             </div>
-          );
-        })}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className="p-2 rounded-lg bg-card border border-border text-card-foreground hover:bg-muted transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                  // Show first page, last page, current page, and pages around current
+                  if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`min-w-[2rem] h-8 px-2 rounded-lg text-sm font-medium transition-all ${
+                          currentPage === page
+                            ? "bg-gradient-to-r from-[#254181] to-[#3d5fa3] text-white"
+                            : "bg-card border border-border text-card-foreground hover:bg-muted"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  } else if (page === currentPage - 2 || page === currentPage + 2) {
+                    return (
+                      <span key={page} className="text-muted-foreground">
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-lg bg-card border border-border text-card-foreground hover:bg-muted transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Empty State */}
       {keys.length === 0 && (
-        <div className="text-center py-16">
+        <div className="text-center py-16 bg-card rounded-xl border border-border">
           <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center shadow-xl">
             <Key className="w-12 h-12 text-white" />
           </div>
