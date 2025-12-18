@@ -40,6 +40,7 @@ export interface Client {
   phone: string;
   company?: string;
   status?: "active" | "inactive";
+  created_at?: string;
 }
 
 export interface ClientCreateInput {

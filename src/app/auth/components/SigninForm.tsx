@@ -65,11 +65,13 @@ function SigninForm() {
                     setTouched({ ...touched, email: true });
                     form.trigger("email");
                   }}
-                  error={touched.email ? form.formState.errors.email?.message : undefined}
                   className="form-input"
                   disabled={isLoading}
                   autoComplete="email"
                 />
+                {touched.email && form.formState.errors.email && (
+                  <span className="text-red-500 text-xs mt-1">{form.formState.errors.email.message}</span>
+                )}
               </div>
             </div>
 
@@ -88,11 +90,13 @@ function SigninForm() {
                     setTouched({ ...touched, password: true });
                     form.trigger("password");
                   }}
-                  error={touched.password ? form.formState.errors.password?.message : undefined}
                   className="form-input"
                   disabled={isLoading}
                   autoComplete="current-password"
                 />
+                {touched.password && form.formState.errors.password && (
+                  <span className="text-red-500 text-xs mt-1">{form.formState.errors.password.message}</span>
+                )}
                 <span
                   onClick={() => setShowPassword(!showPassword)}
                   className="password-toggle"
