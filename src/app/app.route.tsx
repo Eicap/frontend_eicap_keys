@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import SigninForm from "./auth/components/SigninForm";
 import AuthRoute from "./auth/auth.route";
 import KeyForm from "./key/components/KeyForm";
@@ -13,7 +13,7 @@ export default function AppRoute() {
     <div className="h-screen">
       <Routes>
         <Route index element={<SigninForm />} />
-        <Route path="/signin" element={<AuthRoute />} />
+        <Route path="/signin/*" element={<AuthRoute />} />
         <Route
           path="/client/dashboard"
           element={
@@ -54,6 +54,8 @@ export default function AppRoute() {
             </DashboardLayout>
           }
         />
+        {/* Catch-all route - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
