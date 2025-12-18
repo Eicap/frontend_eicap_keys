@@ -134,7 +134,7 @@ function SigninForm() {
             {/* Logo and company name */}
             <div className="logo-branding-section">
               <div className="logo-container">
-                <img src="/src/assets/icon.ico" alt="EICAP Logo" className="welcome-logo" />
+                <img src="/icon.ico" alt="EICAP Logo" className="welcome-logo" />
               </div>
             </div>
 
