@@ -21,12 +21,12 @@ export default function TopNav({ onToggleSidebar, isSidebarCollapsed }: TopNavPr
   };
 
   return (
-    <div className="fixed top-0 right-0 left-0 h-14 bg-[#1a1a1a] border-b border-gray-800 z-40 flex items-center px-4 gap-4"
+    <div className="fixed top-0 right-0 left-0 h-14 bg-sidebar border-b border-sidebar-border z-40 flex items-center px-4 gap-4"
          style={{ marginLeft: isSidebarCollapsed ? '64px' : '256px' }}>
       {/* Toggle Button */}
       <button
         onClick={onToggleSidebar}
-        className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all"
+        className="p-2 rounded-lg bg-sidebar-accent hover:bg-sidebar-accent/80 text-sidebar-foreground/70 hover:text-sidebar-foreground transition-all"
         title={isSidebarCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
       >
         <PanelLeft className="w-5 h-5" />
@@ -34,9 +34,9 @@ export default function TopNav({ onToggleSidebar, isSidebarCollapsed }: TopNavPr
 
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-gray-400">EICAP</span>
-        <ChevronRight className="w-4 h-4 text-gray-600" />
-        <span className="text-white font-medium">{getBreadcrumb()}</span>
+        <span className="text-muted-foreground">EICAP</span>
+        <ChevronRight className="w-4 h-4 text-muted-foreground/50" />
+        <span className="text-sidebar-foreground font-medium">{getBreadcrumb()}</span>
       </div>
     </div>
   );

@@ -108,6 +108,7 @@ export interface Key {
   user_name: string;
   client_id: string;
   client_name: string;
+  client?: Client;
   key_type: KeyType;
   permissions: Permission[];
   created_at: string;
@@ -152,4 +153,12 @@ export interface KeyResponse {
   key_type: KeyType;
   permissions: Permission[];
   created_at: string;
+}
+
+export interface GenerateCodeResponse {
+  code: string;
+}
+
+export interface GenerateKeysInput {
+  quantity: number;
 }

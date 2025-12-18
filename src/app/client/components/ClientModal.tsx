@@ -66,15 +66,15 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm animate-fade-in z-50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-scale-in z-50">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md p-6 animate-scale-in z-50">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <Dialog.Title className="text-2xl font-bold text-gray-900">
+            <Dialog.Title className="text-2xl font-bold text-gray-900 dark:text-white">
               {clientId ? "Editar Cliente" : "Nuevo Cliente"}
             </Dialog.Title>
             <Dialog.Close asChild>
-              <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <X className="w-5 h-5 text-gray-500" />
+              <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
               </button>
             </Dialog.Close>
           </div>
@@ -83,7 +83,7 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Nombre */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Nombre <span className="text-accent">*</span>
               </label>
               <input
@@ -96,18 +96,21 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.name ? "border-accent" : "border-gray-200"}
+                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                  ${errors.name ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: Juan Pérez"
               />
-              {errors.name && <p className="mt-1 text-sm text-accent">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.name.message}</p>
+              )}
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Email <span className="text-accent">*</span>
               </label>
               <input
@@ -121,18 +124,21 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.email ? "border-accent" : "border-gray-200"}
+                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                  ${errors.email ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: juan@example.com"
               />
-              {errors.email && <p className="mt-1 text-sm text-accent">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.email.message}</p>
+              )}
             </div>
 
             {/* Teléfono */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Teléfono <span className="text-accent">*</span>
               </label>
               <input
@@ -146,13 +152,16 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
                 })}
                 className={`
                   w-full px-4 py-3 rounded-lg border-2
-                  ${errors.phone ? "border-accent" : "border-gray-200"}
+                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                  ${errors.phone ? "border-accent" : "border-gray-200 dark:border-gray-700"}
                   focus:border-primary focus:ring-4 focus:ring-primary/10
                   outline-none transition-all
                 `}
                 placeholder="Ej: +1234567890"
               />
-              {errors.phone && <p className="mt-1 text-sm text-accent">{errors.phone.message}</p>}
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.phone.message}</p>
+              )}
             </div>
 
             {/* Actions */}
@@ -160,14 +169,14 @@ export default function ClientModal({ isOpen, onClose, clientId }: ClientModalPr
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary-600 text-white font-medium hover:from-primary-600 hover:to-primary-700 shadow-lg shadow-primary/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-3 rounded-lg bg-gradient-to-r from-[#db1d25] to-[#ff3d47] text-white font-semibold hover:from-[#c01a21] hover:to-[#db1d25] shadow-lg shadow-red-500/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Guardando..." : clientId ? "Actualizar" : "Crear"}
               </button>
