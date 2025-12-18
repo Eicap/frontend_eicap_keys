@@ -5,6 +5,7 @@ import type { Key, KeyType, Permission, Client, KeyUpdateInput } from "@/service
 
 export interface KeyStore {
   keys: Key[];
+  inactiveKeys: Key[];
   keyTypes: KeyType[];
   permissions: Permission[];
   clients: Client[];
@@ -13,6 +14,7 @@ export interface KeyStore {
 
   // Actions
   fetchKeys: () => Promise<void>;
+  fetchInactiveKeys: () => Promise<void>;
   fetchKeyTypes: () => Promise<void>;
   fetchPermissions: () => Promise<void>;
   fetchClients: () => Promise<void>;
@@ -28,6 +30,7 @@ export interface KeyStore {
   }) => Promise<void>;
   updateKey: (id: string, data: KeyUpdateInput) => Promise<void>;
   deleteKey: (id: string) => Promise<void>;
+  createBulkKeys: (quantity: number) => Promise<void>;
   setSearchQuery: (query: string) => void;
 
   // Computed
@@ -36,6 +39,7 @@ export interface KeyStore {
 
 export const useKeyStore = create<KeyStore>((set, get) => ({
   keys: [],
+  inactiveKeys: [],
   keyTypes: [],
   permissions: [],
   clients: [],
@@ -49,6 +53,17 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
       set({ keys: response.data.data, isLoading: false });
     } catch (error) {
       console.error("Error fetching keys:", error);
+      set({ isLoading: false });
+    }
+  },
+
+  fetchInactiveKeys: async () => {
+    try {
+      set({ isLoading: true });
+      const response = await keyService.getKeysInactive();
+      set({ inactiveKeys: response.data.data, isLoading: false });
+    } catch (error) {
+      console.error("Error fetching inactive keys:", error);
       set({ isLoading: false });
     }
   },
@@ -126,6 +141,18 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
     } catch (error) {
       console.error("Error deleting key:", error);
       set({ isLoading: false });
+    }
+  },
+
+  createBulkKeys: async (quantity) => {
+    try {
+      set({ isLoading: true });
+      await keyService.createKeys({ quantity });
+      set({ isLoading: false });
+    } catch (error) {
+      console.error("Error creating bulk keys:", error);
+      set({ isLoading: false });
+      throw error;
     }
   },
 
