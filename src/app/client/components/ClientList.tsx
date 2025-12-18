@@ -84,14 +84,17 @@ export default function ClientList() {
       <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Buscar por nombre, email o teléfono..." />
 
       {/* Clients Grid */}
-      {isLoading ? (
-        <div className="text-center py-16">
-          <div className="inline-block animate-spin">
-            <div className="w-8 h-8 border-4 border-muted border-t-[#254181] rounded-full"></div>
+      <div className="relative">
+        {isLoading && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
+            <div className="text-center">
+              <div className="inline-block animate-spin">
+                <div className="w-10 h-10 border-4 border-muted border-t-[#254181] rounded-full"></div>
+              </div>
+              <p className="text-muted-foreground mt-4">Cargando clientes...</p>
+            </div>
           </div>
-          <p className="text-muted-foreground mt-4">Cargando clientes...</p>
-        </div>
-      ) : (
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[calc(100vh-400px)] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
           {clients.map((client) => {
             return (
@@ -169,7 +172,7 @@ export default function ClientList() {
             );
           })}
         </div>
-      )}
+      </div>
 
       {/* Empty State */}
       {!isLoading && clients.length === 0 && (

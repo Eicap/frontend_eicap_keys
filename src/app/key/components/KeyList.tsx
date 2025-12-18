@@ -156,17 +156,6 @@ export default function KeyList() {
     setCurrentPage(Math.max(1, Math.min(page, totalPages)));
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">Cargando keys...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -189,6 +178,14 @@ export default function KeyList() {
       {displayKeys.length > 0 || isLoading ? (
         <div className="space-y-4">
           <div className="overflow-auto rounded-xl border border-border bg-card shadow-sm max-h-[calc(100vh-320px)] relative">
+            {isLoading && (
+              <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20">
+                <div className="text-center">
+                  <Loader2 className="w-10 h-10 text-primary animate-spin mx-auto mb-3" />
+                  <p className="text-sm text-muted-foreground">Cargando keys...</p>
+                </div>
+              </div>
+            )}
             <table className="w-full min-w-200">
               {/* Table Header */}
               <thead className="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-b-2 border-slate-300 dark:border-slate-600 sticky top-0 z-10">
