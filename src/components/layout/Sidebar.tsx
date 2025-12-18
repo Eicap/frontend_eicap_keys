@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Users, Key, Settings, FileText, BarChart3, ChevronDown, ChevronUp } from "lucide-react";
+import ThemeToggle from "../shared/ThemeToggle";
 
 interface NavItem {
   name: string;
@@ -77,14 +78,14 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
     <aside
       className={`
         fixed left-0 top-0 h-screen
-        bg-[#1a1a1a]
+        bg-sidebar
         transition-all duration-300 ease-in-out z-50
         ${isCollapsed ? "w-16" : "w-64"}
-        border-r border-gray-800
+        border-r border-sidebar-border
       `}
     >
       {/* Header */}
-      <div className="relative p-4 border-b border-gray-800">
+      <div className="relative p-4 border-b border-sidebar-border">
         <div className={`flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
           {!isCollapsed && (
             <div className="flex items-center gap-3">
@@ -92,8 +93,8 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
                 <Key className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-white font-bold text-base">EICAP</h1>
-                <p className="text-gray-400 text-xs">Enterprise</p>
+                <h1 className="text-sidebar-foreground font-bold text-base">EICAP</h1>
+                <p className="text-muted-foreground text-xs">Enterprise</p>
               </div>
             </div>
           )}
@@ -107,7 +108,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
       </div>
 
       {/* Navigation */}
-      <nav className="p-3 space-y-6 overflow-y-auto h-[calc(100vh-180px)] custom-scrollbar">
+      <nav className="p-3 space-y-6 overflow-y-auto h-[calc(100vh-240px)] custom-scrollbar">
         {navSections.map((section) => {
           const isExpanded = expandedSections.includes(section.title);
 
@@ -117,7 +118,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
               {!isCollapsed && (
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-gray-400 hover:text-white transition-colors group"
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-muted-foreground hover:text-sidebar-foreground transition-all duration-200 group bg-sidebar-accent/30 hover:bg-sidebar-accent/50 mb-2"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wider">{section.title}</span>
                   {isExpanded ? (
@@ -145,7 +146,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
                           ${
                             isActive
                               ? "bg-gradient-to-r from-[#254181] to-[#3d5fa3] text-white"
-                              : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                           }
                           ${isCollapsed ? "justify-center" : ""}
                         `}
@@ -171,23 +172,33 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
         })}
       </nav>
 
-      {/* Footer - User info */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
-        <div
-          className={`
-          flex items-center gap-3
-          ${isCollapsed ? "justify-center" : ""}
-        `}
-        >
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#db1d25] to-[#ff3d47] flex items-center justify-center text-white font-bold shadow-lg">
-            A
+      {/* Footer - Theme Toggle & User info */}
+      <div className="absolute bottom-0 left-0 right-0 border-t border-sidebar-border">
+        {/* Theme Toggle */}
+        {!isCollapsed && (
+          <div className="p-3 pb-2">
+            <ThemeToggle />
           </div>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-medium text-sm truncate">Admin</p>
-              <p className="text-gray-400 text-xs truncate">admin@eicap.com</p>
+        )}
+        
+        {/* User Info */}
+        <div className="p-4 pt-2">
+          <div
+            className={`
+            flex items-center gap-3
+            ${isCollapsed ? "justify-center" : ""}
+          `}
+          >
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#db1d25] to-[#ff3d47] flex items-center justify-center text-white font-bold shadow-lg">
+              A
             </div>
-          )}
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <p className="text-sidebar-foreground font-medium text-sm truncate">Admin</p>
+                <p className="text-muted-foreground text-xs truncate">admin@eicap.com</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

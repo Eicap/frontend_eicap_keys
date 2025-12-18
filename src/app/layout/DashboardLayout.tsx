@@ -11,7 +11,7 @@ function DashboardLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f]">
+    <div className="min-h-screen bg-background">
       <Sidebar isCollapsed={isSidebarCollapsed} onToggle={handleToggleSidebar} />
       <TopNav onToggleSidebar={handleToggleSidebar} isSidebarCollapsed={isSidebarCollapsed} />
       
