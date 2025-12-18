@@ -157,7 +157,7 @@ export default function KeyList() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-2 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -176,7 +176,7 @@ export default function KeyList() {
 
       {/* Table Container - Responsive with scroll */}
       {displayKeys.length > 0 || isLoading ? (
-        <div className="space-y-4">
+        <div className="space-y-2">
           <div className="overflow-auto rounded-xl border border-border bg-card shadow-sm max-h-[calc(100vh-320px)] relative">
             {isLoading && (
               <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-20">
@@ -188,30 +188,30 @@ export default function KeyList() {
             )}
             <table className="w-full min-w-200">
               {/* Table Header */}
-              <thead className="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-b-2 border-slate-300 dark:border-slate-600 sticky top-0 z-10">
+              <thead className="bg-linear-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-b-2 border-slate-300 dark:border-slate-600 sticky top-0 z-10">
                 <tr>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Código
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Tipo
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Estado
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Cliente
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Permisos
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Fecha Inicio
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Fecha Expiración
                   </th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                  <th className="px-2 py-3 text-center text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
@@ -231,18 +231,18 @@ export default function KeyList() {
                       `}
                     >
                       {/* Código */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         <span className="font-mono text-sm font-semibold text-card-foreground">{key.code}</span>
                       </td>
 
                       {/* Tipo */}
-                      <td className="px-4 py-3">{getKeyTypeBadge(key.key_type.name)}</td>
+                      <td className="px-2 py-2">{getKeyTypeBadge(key.key_type.name)}</td>
 
                       {/* Estado */}
-                      <td className="px-4 py-3">{getStatusBadge(key.state)}</td>
+                      <td className="px-2 py-2">{getStatusBadge(key.state)}</td>
 
                       {/* Cliente */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         {isEmpresarial && key.client?.name ? (
                           <span className="text-sm text-card-foreground">{key.client.name}</span>
                         ) : (
@@ -251,7 +251,7 @@ export default function KeyList() {
                       </td>
 
                       {/* Permisos */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         {key.permissions && key.permissions.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {key.permissions.slice(0, 2).map((permission) => (
@@ -274,17 +274,17 @@ export default function KeyList() {
                       </td>
 
                       {/* Fecha Inicio */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         <span className="text-sm text-card-foreground">{formatDate(key.init_date)}</span>
                       </td>
 
                       {/* Fecha Expiración */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         <span className="text-sm text-card-foreground">{formatDate(key.due_date)}</span>
                       </td>
 
                       {/* Acciones */}
-                      <td className="px-4 py-3">
+                      <td className="px-2 py-2">
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleView(key.id)}
