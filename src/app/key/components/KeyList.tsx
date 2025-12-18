@@ -1,20 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useKeyStore } from '../../../store/useKeyStore';
-import { Plus, Edit2, Trash2, Key, Calendar, Shield, Zap, Building2, GraduationCap, Loader2 } from 'lucide-react';
-import SearchBar from '../../../components/shared/SearchBar';
-import ActionButton from '../../../components/shared/ActionButton';
-import KeyModal from './KeyModal';
+import { useEffect, useState } from "react";
+import { useKeyStore } from "../../../store/useKeyStore";
+import { Plus, Edit2, Trash2, Key, Calendar, Shield, Zap, Building2, GraduationCap, Loader2 } from "lucide-react";
+import SearchBar from "../../../components/shared/SearchBar";
+import ActionButton from "../../../components/shared/ActionButton";
+import KeyModal from "./KeyModal";
 
 export default function KeyList() {
-  const { 
-    getFilteredKeys, 
-    searchQuery, 
-    setSearchQuery, 
-    deleteKey,
-    fetchKeys,
-    isLoading
-  } = useKeyStore();
-  
+  const { getFilteredKeys, searchQuery, setSearchQuery, deleteKey, fetchKeys, isLoading } = useKeyStore();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
 
@@ -32,7 +25,7 @@ export default function KeyList() {
   };
 
   const handleDelete = async (keyId: string) => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar esta key?')) {
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta key?")) {
       await deleteKey(keyId);
     }
   };
@@ -44,27 +37,27 @@ export default function KeyList() {
 
   const getStatusConfig = (state: string) => {
     switch (state) {
-      case 'active':
+      case "active":
         return {
-          bg: 'bg-green-500/10',
-          text: 'text-green-400',
-          border: 'border-green-500/30',
+          bg: "bg-green-500/10",
+          text: "text-green-400",
+          border: "border-green-500/30",
           icon: <Zap className="w-3 h-3" />,
-          label: 'Activo',
+          label: "Activo",
         };
-      case 'inactive':
+      case "inactive":
         return {
-          bg: 'bg-gray-500/10',
-          text: 'text-gray-400',
-          border: 'border-gray-500/30',
+          bg: "bg-gray-500/10",
+          text: "text-gray-400",
+          border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
-          label: 'Inactivo',
+          label: "Inactivo",
         };
       default:
         return {
-          bg: 'bg-gray-500/10',
-          text: 'text-gray-400',
-          border: 'border-gray-500/30',
+          bg: "bg-gray-500/10",
+          text: "text-gray-400",
+          border: "border-gray-500/30",
           icon: <Shield className="w-3 h-3" />,
           label: state,
         };
@@ -73,35 +66,35 @@ export default function KeyList() {
 
   const getKeyTypeConfig = (keyTypeName: string) => {
     switch (keyTypeName.toLowerCase()) {
-      case 'empresarial':
+      case "empresarial":
         return {
-          bg: 'bg-purple-500/10',
-          text: 'text-purple-400',
-          border: 'border-purple-500/30',
+          bg: "bg-purple-500/10",
+          text: "text-purple-400",
+          border: "border-purple-500/30",
           icon: <Building2 className="w-3 h-3" />,
         };
-      case 'estudiantil':
+      case "estudiantil":
         return {
-          bg: 'bg-blue-500/10',
-          text: 'text-blue-400',
-          border: 'border-blue-500/30',
+          bg: "bg-blue-500/10",
+          text: "text-blue-400",
+          border: "border-blue-500/30",
           icon: <GraduationCap className="w-3 h-3" />,
         };
       default:
         return {
-          bg: 'bg-gray-500/10',
-          text: 'text-gray-400',
-          border: 'border-gray-500/30',
+          bg: "bg-gray-500/10",
+          text: "text-gray-400",
+          border: "border-gray-500/30",
           icon: <Key className="w-3 h-3" />,
         };
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
+    return new Date(dateString).toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
     });
   };
 
@@ -124,12 +117,7 @@ export default function KeyList() {
           <h1 className="text-3xl font-bold text-foreground mb-2">Keys</h1>
           <p className="text-muted-foreground">Administra las licencias y claves de acceso</p>
         </div>
-        <ActionButton
-          onClick={() => setIsModalOpen(true)}
-          icon={Plus}
-          label="Nueva Key"
-          variant="create"
-        />
+        <ActionButton onClick={() => setIsModalOpen(true)} icon={Plus} label="Nueva Key" variant="create" />
       </div>
 
       {/* Search Bar */}
@@ -144,8 +132,8 @@ export default function KeyList() {
         {keys.map((key) => {
           const statusConfig = getStatusConfig(key.state);
           const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
-          const isEmpresarial = key.key_type.name.toLowerCase() === 'empresarial';
-          
+          const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
+
           return (
             <div
               key={key.id}
@@ -184,18 +172,20 @@ export default function KeyList() {
                 {/* Code */}
                 <div className="mb-4 p-3 rounded-lg bg-muted border border-border">
                   <p className="text-xs text-muted-foreground mb-1 font-medium">Código</p>
-                  <p className="font-mono text-sm font-bold text-card-foreground break-all">
-                    {key.code}
-                  </p>
+                  <p className="font-mono text-sm font-bold text-card-foreground break-all">{key.code}</p>
                 </div>
 
                 {/* Badges */}
                 <div className="flex gap-2 mb-4 flex-wrap">
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} flex items-center gap-1.5`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} flex items-center gap-1.5`}
+                  >
                     {statusConfig.icon}
                     {statusConfig.label.toUpperCase()}
                   </span>
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border} flex items-center gap-1.5`}>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border} flex items-center gap-1.5`}
+                  >
                     {keyTypeConfig.icon}
                     {key.key_type.name.toUpperCase()}
                   </span>
@@ -208,9 +198,7 @@ export default function KeyList() {
                       <Building2 className="w-3 h-3" />
                       Cliente
                     </p>
-                    <p className="text-sm font-semibold text-purple-300">
-                      {key.client_name}
-                    </p>
+                    <p className="text-sm font-semibold text-purple-300">{key.client_name}</p>
                   </div>
                 )}
 
@@ -236,29 +224,19 @@ export default function KeyList() {
                   <div className="flex items-center gap-2 p-2 rounded-lg bg-muted">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-xs font-medium text-muted-foreground">Inicio:</span>
-                    <span className="text-xs font-semibold text-blue-500">
-                      {formatDate(key.init_date)}
-                    </span>
+                    <span className="text-xs font-semibold text-blue-500">{formatDate(key.init_date)}</span>
                   </div>
                   <div className="flex items-center gap-2 p-2 rounded-lg bg-muted">
                     <Shield className="w-4 h-4 text-red-500" />
                     <span className="text-xs font-medium text-muted-foreground">Expira:</span>
-                    <span className="text-xs font-semibold text-red-500">
-                      {formatDate(key.due_date)}
-                    </span>
+                    <span className="text-xs font-semibold text-red-500">{formatDate(key.due_date)}</span>
                   </div>
                 </div>
 
                 {/* Footer */}
                 <div className="pt-4 border-t border-border flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">
-                    Creado: {formatDate(key.created_at)}
-                  </span>
-                  {key.user_name && (
-                    <span className="text-xs text-muted-foreground">
-                      Por: {key.user_name}
-                    </span>
-                  )}
+                  <span className="text-xs text-muted-foreground">Creado: {formatDate(key.created_at)}</span>
+                  {key.user_name && <span className="text-xs text-muted-foreground">Por: {key.user_name}</span>}
                 </div>
               </div>
             </div>
@@ -274,27 +252,16 @@ export default function KeyList() {
           </div>
           <h3 className="text-xl font-bold text-foreground mb-2">No se encontraron keys</h3>
           <p className="text-muted-foreground mb-6">
-            {searchQuery
-              ? 'Intenta con otro término de búsqueda'
-              : 'Comienza agregando tu primera key'}
+            {searchQuery ? "Intenta con otro término de búsqueda" : "Comienza agregando tu primera key"}
           </p>
           {!searchQuery && (
-            <ActionButton
-              onClick={() => setIsModalOpen(true)}
-              icon={Plus}
-              label="Crear Primera Key"
-              variant="create"
-            />
+            <ActionButton onClick={() => setIsModalOpen(true)} icon={Plus} label="Crear Primera Key" variant="create" />
           )}
         </div>
       )}
 
       {/* Modal */}
-      <KeyModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        keyId={editingKey}
-      />
+      <KeyModal isOpen={isModalOpen} onClose={handleCloseModal} keyId={editingKey} />
     </div>
   );
 }

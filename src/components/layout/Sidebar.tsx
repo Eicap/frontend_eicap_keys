@@ -118,13 +118,17 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
               {!isCollapsed && (
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-muted-foreground hover:text-sidebar-foreground transition-all duration-200 group bg-sidebar-accent/30 hover:bg-sidebar-accent/50 mb-2"
+                  className="w-full flex  items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-200 group mb-2
+                    bg-gray-100 dark:bg-sidebar-accent/50 
+                    hover:bg-gray-200 dark:hover:bg-sidebar-accent
+                    text-white dark:text-sidebar-foreground/60 
+                    hover:text-gray-900 dark:hover:text-sidebar-foreground"
                 >
                   <span className="text-xs font-semibold uppercase tracking-wider">{section.title}</span>
                   {isExpanded ? (
-                    <ChevronUp className="w-3 h-3 group-hover:text-[#db1d25]" />
+                    <ChevronUp className="w-3 h-3 group-hover:text-[#db1d25] transition-colors" />
                   ) : (
-                    <ChevronDown className="w-3 h-3 group-hover:text-[#db1d25]" />
+                    <ChevronDown className="w-3 h-3 group-hover:text-[#db1d25] transition-colors" />
                   )}
                 </button>
               )}
@@ -142,21 +146,31 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
                         className={`
                           flex items-center gap-3 px-3 py-2.5 rounded-lg
                           transition-all duration-200
-                          group relative
-                          ${
-                            isActive
-                              ? "bg-gradient-to-r from-[#254181] to-[#3d5fa3] text-white"
-                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                          }
+                          group relative 
+                          ${isActive ? "bg-gradient-to-r from-[#254181] to-[#3d5fa3]" : "hover:bg-sidebar-accent"}
                           ${isCollapsed ? "justify-center" : ""}
                         `}
                         title={isCollapsed ? item.name : ""}
                       >
                         {/* Icon */}
-                        <div className="relative z-10">{item.icon}</div>
+                        <div
+                          className={`relative z-10 ${
+                            isActive ? "text-white" : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground"
+                          }`}
+                        >
+                          {item.icon}
+                        </div>
 
                         {/* Label */}
-                        {!isCollapsed && <span className="relative z-10 font-medium text-sm">{item.name}</span>}
+                        {!isCollapsed && (
+                          <span
+                            className={`relative z-10 font-medium text-sm ${
+                              isActive ? "text-white" : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground"
+                            }`}
+                          >
+                            {item.name}
+                          </span>
+                        )}
 
                         {/* Active indicator */}
                         {isActive && (
@@ -180,7 +194,7 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
             <ThemeToggle />
           </div>
         )}
-        
+
         {/* User Info */}
         <div className="p-4 pt-2">
           <div
@@ -208,10 +222,10 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
           width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.05);
+          background: color-mix(in oklch, var(--color-sidebar-accent) 30%, transparent);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #254181;
+          background: color-mix(in oklch, var(--color-sidebar-foreground) 30%, transparent);
           border-radius: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
