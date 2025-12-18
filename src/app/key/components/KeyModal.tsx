@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { X, Loader2 } from "lucide-react";
+import { X, Loader2, RefreshCw } from "lucide-react";
 import { useKeyStore } from "../../../store/useKeyStore";
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -21,18 +21,30 @@ interface KeyFormData {
 }
 
 export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
-  const { keys, keyTypes, permissions, clients, fetchKeyTypes, fetchPermissions, fetchClients, createKey, updateKey } =
-    useKeyStore();
+  const {
+    keys,
+    keyTypes,
+    permissions,
+    clients,
+    fetchKeyTypes,
+    fetchPermissions,
+    fetchClients,
+    createKey,
+    updateKey,
+    generateKeyCode,
+  } = useKeyStore();
 
   const [selectedKeyType, setSelectedKeyType] = useState<string>("");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<KeyFormData>();
 
@@ -90,6 +102,19 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
     setSelectedPermissions((prev) =>
       prev.includes(permissionId) ? prev.filter((id) => id !== permissionId) : [...prev, permissionId]
     );
+  };
+
+  const handleGenerateCode = async () => {
+    try {
+      setIsGenerating(true);
+      const code = await generateKeyCode();
+      setValue("code", code);
+    } catch (error) {
+      console.error("Error generating code:", error);
+      alert("Error al generar el código. Por favor, intenta de nuevo.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const onSubmit = async (data: KeyFormData) => {
@@ -165,23 +190,35 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Código <span className="text-accent">*</span>
                   </label>
-                  <input
-                    {...register("code", {
-                      required: "El código es requerido",
-                      minLength: {
-                        value: 3,
-                        message: "El código debe tener al menos 3 caracteres",
-                      },
-                    })}
-                    className={`
-                      w-full px-4 py-3 rounded-lg border-2 font-mono
-                      bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                      ${errors.code ? "border-accent" : "border-gray-200 dark:border-gray-700"}
-                      focus:border-primary focus:ring-4 focus:ring-primary/10
-                      outline-none transition-all
-                    `}
-                    placeholder="Ej: Eee-t98"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      {...register("code", {
+                        required: "El código es requerido",
+                        minLength: {
+                          value: 3,
+                          message: "El código debe tener al menos 3 caracteres",
+                        },
+                      })}
+                      className={`
+                        flex-1 px-4 py-3 rounded-lg border-2 font-mono
+                        bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                        ${errors.code ? "border-accent" : "border-gray-200 dark:border-gray-700"}
+                        focus:border-primary focus:ring-4 focus:ring-primary/10
+                        outline-none transition-all
+                      `}
+                      placeholder="Ej: Eee-t98"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleGenerateCode}
+                      disabled={isGenerating}
+                      className="px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      title="Generar código automáticamente"
+                    >
+                      <RefreshCw className={`w-5 h-5 ${isGenerating ? "animate-spin" : ""}`} />
+                      {isGenerating ? "Generando..." : "Generar"}
+                    </button>
+                  </div>
                   {errors.code && (
                     <p className="mt-1 text-sm text-red-500 dark:text-red-400 font-medium">{errors.code.message}</p>
                   )}
@@ -374,7 +411,7 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
                 type="submit"
                 form="key-form"
                 disabled={isSubmitting}
-                className="flex-1 px-4 py-3 rounded-lg bg-gradient-to-r from-[#db1d25] to-[#ff3d47] text-white font-semibold hover:from-[#c01a21] hover:to-[#db1d25] shadow-lg shadow-red-500/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-3 rounded-lg bg-linear-to-r from-[#db1d25] to-[#ff3d47] text-white font-semibold hover:from-[#c01a21] hover:to-[#db1d25] shadow-lg shadow-red-500/30 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>

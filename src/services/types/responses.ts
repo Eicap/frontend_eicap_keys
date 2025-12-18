@@ -153,3 +153,11 @@ export interface KeyResponse {
   permissions: Permission[];
   created_at: string;
 }
+
+export interface GenerateCodeResponse {
+  code: string;
+}
+
+export interface GenerateKeysInput {
+  quantity: number;
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Users, Key, Settings, FileText, BarChart3, ChevronDown, ChevronUp } from "lucide-react";
+import { Users, Key, Settings, FileText, BarChart3, ChevronDown, ChevronUp, KeyRound } from "lucide-react";
 import ThemeToggle from "../shared/ThemeToggle";
 
 interface NavItem {
@@ -32,6 +32,11 @@ const navSections: NavSection[] = [
         name: "Keys",
         path: "/key/dashboard",
         icon: <Key className="w-5 h-5" />,
+      },
+      {
+        name: "Keys Inactivas",
+        path: "/key/inactive",
+        icon: <KeyRound className="w-5 h-5" />,
       },
     ],
   },

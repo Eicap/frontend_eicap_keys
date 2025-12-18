@@ -16,6 +16,7 @@ export interface KeyStore {
   fetchKeyTypes: () => Promise<void>;
   fetchPermissions: () => Promise<void>;
   fetchClients: () => Promise<void>;
+  generateKeyCode: () => Promise<string>;
   createKey: (data: {
     code: string;
     init_date: string;
@@ -76,6 +77,16 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
       set({ clients: response.data.data });
     } catch (error) {
       console.error("Error fetching clients:", error);
+    }
+  },
+
+  generateKeyCode: async () => {
+    try {
+      const response = await keyService.generateKeyCode();
+      return response.data.code;
+    } catch (error) {
+      console.error("Error generating key code:", error);
+      throw error;
     }
   },
 
