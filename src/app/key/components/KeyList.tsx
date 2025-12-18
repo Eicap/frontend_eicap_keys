@@ -189,7 +189,7 @@ export default function KeyList() {
       {displayKeys.length > 0 || isLoading ? (
         <div className="space-y-4">
           <div className="overflow-auto rounded-xl border border-border bg-card shadow-sm max-h-[calc(100vh-320px)] relative">
-            <table className="w-full min-w-[800px]">
+            <table className="w-full min-w-200">
               {/* Table Header */}
               <thead className="bg-muted/50 border-b border-border sticky top-0 z-10">
                 <tr>

@@ -81,7 +81,7 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
         due_date: key.due_date,
         state: key.state,
         key_type_id: key.key_type.id,
-        client_id: key.client_id || "",
+        client_id: key.client?.id || "",
       });
       setSelectedKeyType(key.key_type.name);
       setSelectedPermissions(key.permissions.map((p) => p.id));
@@ -227,11 +227,11 @@ export default function KeyModal({ isOpen, onClose, keyId, mode = 'create' }: Ke
                 </div>
 
                 {/* Cliente - Only for empresarial */}
-                {key.key_type.name.toLowerCase() === "empresarial" && key.client_name && (
+                {key.key_type.name.toLowerCase() === "empresarial" && key.client?.name && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cliente</label>
                     <div className="px-4 py-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                      <span className="text-base font-semibold text-purple-700 dark:text-purple-400">{key.client_name}</span>
+                      <span className="text-base font-semibold text-purple-700 dark:text-purple-400">{key.client.name}</span>
                     </div>
                   </div>
                 )}
