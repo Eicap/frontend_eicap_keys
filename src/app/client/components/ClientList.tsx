@@ -5,12 +5,25 @@ import { Plus, Edit2, Trash2, Mail, Phone, User, Eye } from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import ClientModal from "./ClientModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function ClientList() {
   const { getFilteredClients, searchQuery, setSearchQuery, deleteClient, fetchClients, isLoading } = useClientStore();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState<string | null>(null);
 
   // Cargar clientes al montar el componente
   useEffect(() => {
@@ -25,8 +38,22 @@ export default function ClientList() {
   };
 
   const handleDelete = (clientId: string) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar este cliente?")) {
-      deleteClient(clientId);
+    setClientToDelete(clientId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (clientToDelete) {
+      try {
+        await deleteClient(clientToDelete);
+        toast.success("Cliente eliminado correctamente");
+      } catch (error) {
+        console.error("Error deleting client:", error);
+        toast.error("Error al eliminar el cliente");
+      } finally {
+        setDeleteDialogOpen(false);
+        setClientToDelete(null);
+      }
     }
   };
 
@@ -167,6 +194,28 @@ export default function ClientList() {
 
       {/* Modal */}
       <ClientModal isOpen={isModalOpen} onClose={handleCloseModal} clientId={editingClient} />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">¿Estás seguro?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Esta acción eliminará permanentemente el cliente y todos sus datos asociados. Esta acción no se puede
+              deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-muted text-card-foreground hover:bg-muted/80">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

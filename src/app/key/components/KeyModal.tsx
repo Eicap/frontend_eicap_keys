@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { X, Loader2, RefreshCw } from "lucide-react";
 import { useKeyStore } from "../../../store/useKeyStore";
 import * as Dialog from "@radix-ui/react-dialog";
+import { toast } from "sonner";
 
 interface KeyModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ interface KeyFormData {
 export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
   const {
     keys,
+    inactiveKeys,
     keyTypes,
     permissions,
     clients,
@@ -48,7 +50,8 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
     formState: { errors },
   } = useForm<KeyFormData>();
 
-  const key = keyId ? keys.find((k) => k.id === keyId) : null;
+  // Buscar en ambas listas: keys activas e inactivas
+  const key = keyId ? keys.find((k) => k.id === keyId) || inactiveKeys.find((k) => k.id === keyId) : null;
   const watchKeyType = watch("key_type_id");
 
   // Fetch initial data
@@ -109,9 +112,10 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
       setIsGenerating(true);
       const code = await generateKeyCode();
       setValue("code", code);
+      toast.success("Código generado correctamente");
     } catch (error) {
       console.error("Error generating code:", error);
-      alert("Error al generar el código. Por favor, intenta de nuevo.");
+      toast.error("Error al generar el código. Por favor, intenta de nuevo.");
     } finally {
       setIsGenerating(false);
     }
@@ -142,8 +146,10 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
 
       if (keyId) {
         await updateKey(keyId, submitData);
+        toast.success("Key actualizada correctamente");
       } else {
         await createKey(submitData);
+        toast.success("Key creada correctamente");
       }
 
       onClose();
@@ -151,7 +157,7 @@ export default function KeyModal({ isOpen, onClose, keyId }: KeyModalProps) {
       setSelectedPermissions([]);
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error al guardar la key. Por favor, intenta de nuevo.");
+      toast.error("Error al guardar la key. Por favor, intenta de nuevo.");
     } finally {
       setIsSubmitting(false);
     }

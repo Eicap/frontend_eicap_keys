@@ -19,6 +19,17 @@ import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import KeyModal from "./KeyModal";
 import KeyDetailsModal from "./KeyDetailsModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function KeyList() {
   const { getFilteredKeys, searchQuery, setSearchQuery, deleteKey, fetchKeys, isLoading } = useKeyStore();
@@ -29,6 +40,8 @@ export default function KeyList() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [keyToDelete, setKeyToDelete] = useState<string | null>(null);
 
   const keys = getFilteredKeys();
 
@@ -59,9 +72,23 @@ export default function KeyList() {
     setIsDetailsModalOpen(true);
   };
 
-  const handleDelete = async (keyId: string) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta key?")) {
-      await deleteKey(keyId);
+  const handleDelete = (keyId: string) => {
+    setKeyToDelete(keyId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (keyToDelete) {
+      try {
+        await deleteKey(keyToDelete);
+        toast.success("Key eliminada correctamente");
+      } catch (error) {
+        console.error("Error deleting key:", error);
+        toast.error("Error al eliminar la key");
+      } finally {
+        setDeleteDialogOpen(false);
+        setKeyToDelete(null);
+      }
     }
   };
 
@@ -481,6 +508,27 @@ export default function KeyList() {
           keyData={keys.find((k) => k.id === viewingKey)!}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">¿Estás seguro?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Esta acción eliminará permanentemente la key. Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-muted text-card-foreground hover:bg-muted/80">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

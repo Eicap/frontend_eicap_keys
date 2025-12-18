@@ -17,6 +17,17 @@ import {
 } from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import KeyModal from "./KeyModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 export default function InactiveKeyList() {
   const { inactiveKeys, searchQuery, setSearchQuery, deleteKey, fetchInactiveKeys, isLoading, createBulkKeys } =
@@ -29,6 +40,8 @@ export default function InactiveKeyList() {
   const [showBulkDialog, setShowBulkDialog] = useState(false);
   const [bulkQuantity, setBulkQuantity] = useState("5");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [keyToDelete, setKeyToDelete] = useState<string | null>(null);
 
   // Filter keys based on search query
   const filteredKeys = inactiveKeys.filter((key) => {
@@ -62,10 +75,24 @@ export default function InactiveKeyList() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (keyId: string) => {
-    if (window.confirm("¿Estás seguro de que deseas eliminar esta key?")) {
-      await deleteKey(keyId);
-      await fetchInactiveKeys();
+  const handleDelete = (keyId: string) => {
+    setKeyToDelete(keyId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (keyToDelete) {
+      try {
+        await deleteKey(keyToDelete);
+        await fetchInactiveKeys();
+        toast.success("Key eliminada correctamente");
+      } catch (error) {
+        console.error("Error deleting key:", error);
+        toast.error("Error al eliminar la key");
+      } finally {
+        setDeleteDialogOpen(false);
+        setKeyToDelete(null);
+      }
     }
   };
 
@@ -78,7 +105,7 @@ export default function InactiveKeyList() {
   const handleGenerateBulk = async () => {
     const quantity = parseInt(bulkQuantity);
     if (isNaN(quantity) || quantity < 1 || quantity > 100) {
-      alert("Por favor ingresa una cantidad válida entre 1 y 100");
+      toast.error("Por favor ingresa una cantidad válida entre 1 y 100");
       return;
     }
 
@@ -88,9 +115,10 @@ export default function InactiveKeyList() {
       setShowBulkDialog(false);
       setBulkQuantity("5");
       await fetchInactiveKeys();
+      toast.success(`${quantity} keys generadas correctamente`);
     } catch (error) {
       console.error("Error generating bulk keys:", error);
-      alert("Error al generar las keys. Intenta nuevamente.");
+      toast.error("Error al generar las keys. Intenta nuevamente.");
     } finally {
       setIsGenerating(false);
     }
@@ -518,6 +546,27 @@ export default function InactiveKeyList() {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-foreground">¿Estás seguro?</AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Esta acción eliminará permanentemente la key. Esta acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-muted text-card-foreground hover:bg-muted/80">Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
