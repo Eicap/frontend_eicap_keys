@@ -13,16 +13,20 @@ import {
   Loader2,
   ChevronLeft,
   ChevronRight,
+  Eye,
 } from "lucide-react";
 import SearchBar from "../../../components/shared/SearchBar";
 import ActionButton from "../../../components/shared/ActionButton";
 import KeyModal from "./KeyModal";
+import KeyDetailsModal from "./KeyDetailsModal";
 
 export default function KeyList() {
   const { getFilteredKeys, searchQuery, setSearchQuery, deleteKey, fetchKeys, isLoading } = useKeyStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
+  const [viewingKey, setViewingKey] = useState<string | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
@@ -50,6 +54,11 @@ export default function KeyList() {
     setIsModalOpen(true);
   };
 
+  const handleView = (keyId: string) => {
+    setViewingKey(keyId);
+    setIsDetailsModalOpen(true);
+  };
+
   const handleDelete = async (keyId: string) => {
     if (window.confirm("¿Estás seguro de que deseas eliminar esta key?")) {
       await deleteKey(keyId);
@@ -59,6 +68,11 @@ export default function KeyList() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingKey(null);
+  };
+
+  const handleCloseDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+    setViewingKey(null);
   };
 
   const getStatusConfig = (state: string) => {
@@ -157,136 +171,130 @@ export default function KeyList() {
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-muted/50">
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Código</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Tipo</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Estado</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Cliente</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Permisos</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Fecha Inicio</th>
-                <th className="text-left p-4 text-sm font-semibold text-muted-foreground">Fecha Expiración</th>
-                <th className="text-right p-4 text-sm font-semibold text-muted-foreground">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentKeys.map((key) => {
-                const statusConfig = getStatusConfig(key.state);
-                const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
-                const isEmpresarial = key.key_type.name.toLowerCase() === "empresarial";
+          <div className="max-h-[calc(100vh-280px)] overflow-y-auto">
+            <table className="w-full">
+              <thead className="sticky top-0 z-10 bg-muted/50 backdrop-blur-sm">
+                <tr className="border-b border-border">
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Código</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Tipo</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Estado</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Permisos</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Inicio</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Expiración</th>
+                  <th className="text-center p-4 text-sm font-semibold text-muted-foreground">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentKeys.map((key) => {
+                  const statusConfig = getStatusConfig(key.state);
+                  const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
 
-                return (
-                  <tr key={key.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                    {/* Code */}
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#254181] to-[#3d5fa3] flex items-center justify-center text-white shadow-md flex-shrink-0">
-                          <Key className="w-5 h-5" />
+                  return (
+                    <tr key={key.id} className="border-b border-border hover:bg-muted/50 transition-colors">
+                      {/* Code */}
+                      <td className="p-4 min-w-25">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-sm font-semibold text-card-foreground break-all">
+                            {key.code}
+                          </span>
                         </div>
-                        <span className="font-mono text-sm font-semibold text-card-foreground">{key.code}</span>
-                      </div>
-                    </td>
+                      </td>
 
-                    {/* Key Type */}
-                    <td className="p-4">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border}`}
-                      >
-                        {keyTypeConfig.icon}
-                        {key.key_type.name.charAt(0).toUpperCase() + key.key_type.name.slice(1)}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="p-4">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}
-                      >
-                        {statusConfig.icon}
-                        {statusConfig.label}
-                      </span>
-                    </td>
-
-                    {/* Client */}
-                    <td className="p-4">
-                      {isEmpresarial && key.client_name ? (
-                        <div className="flex items-center gap-1.5 text-sm text-purple-400">
-                          <Building2 className="w-4 h-4" />
-                          <span className="font-medium">{key.client_name}</span>
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
-                      )}
-                    </td>
-
-                    {/* Permissions */}
-                    <td className="p-4">
-                      {key.permissions && key.permissions.length > 0 ? (
-                        <div className="flex flex-wrap gap-1 max-w-xs">
-                          {key.permissions.slice(0, 2).map((permission) => (
-                            <span
-                              key={permission.id}
-                              className="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                            >
-                              {permission.name}
-                            </span>
-                          ))}
-                          {key.permissions.length > 2 && (
-                            <span className="px-2 py-0.5 rounded text-xs font-medium bg-muted text-muted-foreground">
-                              +{key.permissions.length - 2}
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Sin permisos</span>
-                      )}
-                    </td>
-
-                    {/* Init Date */}
-                    <td className="p-4">
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <Calendar className="w-4 h-4 text-blue-500" />
-                        <span className="text-card-foreground">{formatDate(key.init_date)}</span>
-                      </div>
-                    </td>
-
-                    {/* Due Date */}
-                    <td className="p-4">
-                      <div className="flex items-center gap-1.5 text-sm">
-                        <Shield className="w-4 h-4 text-red-500" />
-                        <span className="text-card-foreground">{formatDate(key.due_date)}</span>
-                      </div>
-                    </td>
-
-                    {/* Actions */}
-                    <td className="p-4">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => handleEdit(key.id)}
-                          className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
-                          title="Editar"
+                      {/* Key Type */}
+                      <td className="p-4">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${keyTypeConfig.bg} ${keyTypeConfig.text} ${keyTypeConfig.border}`}
                         >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(key.id)}
-                          className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
-                          title="Eliminar"
+                          {keyTypeConfig.icon}
+                          {key.key_type.name.charAt(0).toUpperCase() + key.key_type.name.slice(1)}
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="p-4">
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}
                         >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                          {statusConfig.icon}
+                          {statusConfig.label}
+                        </span>
+                      </td>
+
+                      {/* Permissions */}
+                      <td className="p-4">
+                        {key.permissions && key.permissions.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 max-w-xs">
+                            {key.permissions.slice(0, 2).map((permission) => (
+                              <span
+                                key={permission.id}
+                                className="px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              >
+                                {permission.name}
+                              </span>
+                            ))}
+                            {key.permissions.length > 2 && (
+                              <span className="px-2 py-0.5 rounded text-xs font-medium bg-muted text-muted-foreground">
+                                +{key.permissions.length - 2}
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">Sin permisos</span>
+                        )}
+                      </td>
+
+                      {/* Init Date */}
+                      <td className="p-4">
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <Calendar className="w-4 h-4 text-blue-500" />
+                          <span className="text-card-foreground">{formatDate(key.init_date)}</span>
+                        </div>
+                      </td>
+
+                      {/* Due Date */}
+                      <td className="p-4">
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <Shield className="w-4 h-4 text-red-500" />
+                          <span className="text-card-foreground">{formatDate(key.due_date)}</span>
+                        </div>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="p-4">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleView(key.id)}
+                            className="p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 hover:border-green-500/30 transition-all"
+                            title="Ver detalles"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(key.id)}
+                            className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/30 transition-all"
+                            title="Editar"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(key.id)}
+                            className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-all"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Mobile Cards */}
-        <div className="md:hidden space-y-4 p-4">
+        <div className="md:hidden space-y-4 p-4 max-h-[calc(100vh-320px)] overflow-y-auto">
           {currentKeys.map((key) => {
             const statusConfig = getStatusConfig(key.state);
             const keyTypeConfig = getKeyTypeConfig(key.key_type.name);
@@ -306,6 +314,13 @@ export default function KeyList() {
                     </div>
                   </div>
                   <div className="flex gap-2">
+                    <button
+                      onClick={() => handleView(key.id)}
+                      className="p-2 rounded-lg bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 hover:bg-green-500/20 transition-all"
+                      title="Ver detalles"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </button>
                     <button
                       onClick={() => handleEdit(key.id)}
                       className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-all"
@@ -457,6 +472,15 @@ export default function KeyList() {
 
       {/* Modal */}
       <KeyModal isOpen={isModalOpen} onClose={handleCloseModal} keyId={editingKey} />
+
+      {/* Details Modal */}
+      {viewingKey && (
+        <KeyDetailsModal
+          isOpen={isDetailsModalOpen}
+          onClose={handleCloseDetailsModal}
+          keyData={keys.find((k) => k.id === viewingKey)!}
+        />
+      )}
     </div>
   );
 }
