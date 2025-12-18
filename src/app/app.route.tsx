@@ -6,6 +6,7 @@ import InactiveKeyList from "./key/components/InactiveKeyList";
 import DashboardLayout from "./layout/DashboardLayout";
 import ClientForm from "./client/components/ClientForm";
 import ClientKeysView from "./client/components/ClientKeysView";
+import KeyReports from "./reports/components/KeyReports";
 
 export default function AppRoute() {
   return (
@@ -18,6 +19,7 @@ export default function AppRoute() {
           <Route path="/client/:clientId/keys" element={<ClientKeysView />} />
           <Route path="/key/dashboard" element={<KeyForm />} />
           <Route path="/key/inactive" element={<InactiveKeyList />} />
+          <Route path="/reports" element={<KeyReports />} />
         </Route>
       </Routes>
     </div>
