@@ -14,10 +14,12 @@ interface ClientStore {
   searchQuery: string;
   isLoading: boolean;
   error: string | null;
+  clientsCache: Client[] | null;
+  lastFetch: number | null;
 
   // Actions
   setClients: (clients: Client[]) => void;
-  fetchClients: () => Promise<void>;
+  fetchClients: (forceRefresh?: boolean) => Promise<void>;
   addClient: (clientData: { name: string; email: string; phone: string }) => Promise<void>;
   updateClient: (id: string, clientData: Partial<Client>) => Promise<void>;
   deleteClient: (id: string) => Promise<void>;
@@ -34,6 +36,8 @@ export const useClientStore = create<ClientStore>((set, get) => ({
   searchQuery: "",
   isLoading: false,
   error: null,
+  clientsCache: null,
+  lastFetch: null,
 
   setClients: (clients) => set({ clients }),
 
@@ -41,11 +45,26 @@ export const useClientStore = create<ClientStore>((set, get) => ({
 
   setError: (error) => set({ error }),
 
-  fetchClients: async () => {
+  fetchClients: async (forceRefresh = false) => {
+    const { clientsCache, lastFetch } = get();
+    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+    const now = Date.now();
+
+    // Si hay caché válido y no es refresh forzado, usar caché
+    if (!forceRefresh && clientsCache && lastFetch && (now - lastFetch) < CACHE_DURATION) {
+      set({ clients: clientsCache });
+      return;
+    }
+
     set({ isLoading: true, error: null });
     try {
       const response = await clientService.getClients();
-      set({ clients: response.data.data });
+      const clientsData = response.data.data;
+      set({ 
+        clients: clientsData,
+        clientsCache: clientsData,
+        lastFetch: now
+      });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al cargar clientes";
       set({ error: errorMessage });
@@ -58,8 +77,9 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await clientService.createClient(clientData);
-      // Recargar lista después de crear
-      await get().fetchClients();
+      // Limpiar caché y recargar
+      set({ clientsCache: null });
+      await get().fetchClients(true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al crear cliente";
       set({ error: errorMessage });
@@ -73,8 +93,9 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await clientService.updateClient(id, clientData);
-      // Recargar lista después de actualizar
-      await get().fetchClients();
+      // Limpiar caché y recargar
+      set({ clientsCache: null });
+      await get().fetchClients(true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al actualizar cliente";
       set({ error: errorMessage });
@@ -88,8 +109,9 @@ export const useClientStore = create<ClientStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await clientService.deleteClient(id);
-      // Recargar lista después de eliminar
-      await get().fetchClients();
+      // Limpiar caché y recargar
+      set({ clientsCache: null });
+      await get().fetchClients(true);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al eliminar cliente";
       set({ error: errorMessage });

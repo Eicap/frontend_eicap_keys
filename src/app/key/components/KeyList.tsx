@@ -172,13 +172,13 @@ export default function KeyList() {
         placeholder="Buscar por código, tipo, estado, cliente..."
       />
 
-      {/* Table Container - Responsive with horizontal scroll on mobile */}
+      {/* Table Container - Responsive with scroll */}
       {displayKeys.length > 0 || isLoading ? (
         <div className="space-y-4">
-          <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+          <div className="overflow-auto rounded-xl border border-border bg-card shadow-sm max-h-[calc(100vh-320px)] relative">
             <table className="w-full min-w-[800px]">
               {/* Table Header */}
-              <thead className="bg-muted/50 border-b border-border">
+              <thead className="bg-muted/50 border-b border-border sticky top-0 z-10">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Código
