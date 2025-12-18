@@ -171,6 +171,16 @@ h1 {
 
 /* Custom Scrollbar Styles */
 @layer utilities {
+  /* Hide scrollbar but keep functionality - Landing page style */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+
   .scrollbar-thin::-webkit-scrollbar {
     width: 8px;
     height: 8px;
