@@ -206,6 +206,9 @@ export default function KeyList() {
                     Cliente
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Permisos
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     Fecha Inicio
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -243,8 +246,31 @@ export default function KeyList() {
 
                       {/* Cliente */}
                       <td className="px-4 py-3">
-                        {isEmpresarial && key.client_name ? (
-                          <span className="text-sm text-card-foreground">{key.client_name}</span>
+                        {isEmpresarial && key.client?.name ? (
+                          <span className="text-sm text-card-foreground">{key.client.name}</span>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">-</span>
+                        )}
+                      </td>
+
+                      {/* Permisos */}
+                      <td className="px-4 py-3">
+                        {key.permissions && key.permissions.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {key.permissions.slice(0, 2).map((permission) => (
+                              <span
+                                key={permission.id}
+                                className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border border-indigo-500/20"
+                              >
+                                {permission.name}
+                              </span>
+                            ))}
+                            {key.permissions.length > 2 && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-500/10 text-gray-700 dark:text-gray-400 border border-gray-500/20">
+                                +{key.permissions.length - 2}
+                              </span>
+                            )}
+                          </div>
                         ) : (
                           <span className="text-sm text-muted-foreground">-</span>
                         )}

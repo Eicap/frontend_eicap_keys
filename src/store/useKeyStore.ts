@@ -247,7 +247,7 @@ export const useKeyStore = create<KeyStore>((set, get) => ({
         key.code.toLowerCase().includes(query) ||
         key.key_type.name.toLowerCase().includes(query) ||
         key.state.toLowerCase().includes(query) ||
-        key.client_name?.toLowerCase().includes(query) ||
+        key.client?.name?.toLowerCase().includes(query) ||
         key.permissions.some((p) => p.name.toLowerCase().includes(query))
     );
   },

@@ -14,7 +14,12 @@ interface KeyDetailsModalProps {
       id: string;
       name: string;
     };
-    client_name?: string;
+    client?: {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+    };
     client_id?: string;
     permissions: Array<{
       id: string;
@@ -149,15 +154,27 @@ export default function KeyDetailsModal({ isOpen, onClose, keyData }: KeyDetails
               </div>
 
               {/* Client - Only for empresarial */}
-              {isEmpresarial && keyData.client_name && (
+              {isEmpresarial && keyData.client?.name && (
                 <div className="bg-purple-50 dark:bg-purple-950/20 rounded-xl p-5 border-2 border-purple-200 dark:border-purple-800">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-3">
                     <Building2 className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                     <h3 className="text-sm font-semibold text-purple-900 dark:text-purple-300 uppercase tracking-wide">
                       Cliente Empresarial
                     </h3>
                   </div>
-                  <p className="text-xl font-bold text-purple-700 dark:text-purple-400">{keyData.client_name}</p>
+                  <div className="space-y-2">
+                    <p className="text-xl font-bold text-purple-700 dark:text-purple-400">{keyData.client.name}</p>
+                    {keyData.client.email && (
+                      <p className="text-sm text-purple-600 dark:text-purple-400 flex items-center gap-2">
+                        <span className="font-medium">Email:</span> {keyData.client.email}
+                      </p>
+                    )}
+                    {keyData.client.phone && (
+                      <p className="text-sm text-purple-600 dark:text-purple-400 flex items-center gap-2">
+                        <span className="font-medium">Teléfono:</span> {keyData.client.phone}
+                      </p>
+                    )}
+                  </div>
                 </div>
               )}
 
