@@ -6,4 +6,6 @@ export const breadcrumb = {
     client: (clientId: string, clientName: string) => ({ label: clientName, path: `/client/${clientId}` }),
     keys: { label: 'Llaves', path: '/keys' },
     key: (keyId: string, keyCode: string) => ({ label: keyCode, path: `/keys/${keyId}` }),
+    batchs: { label: 'Lotes', path: '/batchs' },
+    batch: (batchId: string, batchName: string) => ({ label: batchName, path: `/batchs/${batchId}` }),
 }

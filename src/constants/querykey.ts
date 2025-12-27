@@ -7,4 +7,6 @@ export const querykey = {
     keys: 'keys',
     key_codes: 'key_codes',
     key_histories: 'key_histories',
+    batch: 'batch',
+    batchs: 'batchs',
 }

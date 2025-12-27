@@ -25,6 +25,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { breadcrumb } from "@/constants/breadcrumb"
 
 // This is sample data.
 const data = {
@@ -58,31 +59,23 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Usuarios",
-          url: "/users",
+          title: breadcrumb.users.label,
+          url: breadcrumb.users.path,
         },
         {
-          title: "Clientes",
-          url: "/clients",
+          title: breadcrumb.clients.label,
+          url: breadcrumb.clients.path,
         },
       ]
     },
     {
-      title: "Models",
+      title: "Llaves",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          title: breadcrumb.keys.label,
+          url: breadcrumb.keys.path,
         },
       ],
     },

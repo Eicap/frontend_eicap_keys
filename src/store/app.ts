@@ -27,7 +27,7 @@ export const useAppStore = create<AppStore>((set) => ({
   openDialog: (dialog) => {
     const id = `dialog-${Date.now()}-${Math.random()}`
     set((state) => ({
-      dialogs: [...state.dialogs, { ...dialog, id }],
+      dialogs: [{ ...dialog, id }, ...state.dialogs],
     }))
     return id
   },
