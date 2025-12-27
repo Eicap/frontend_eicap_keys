@@ -1,41 +1,32 @@
 import { useForm } from '@tanstack/react-form'
-import { CreateUserSchema, UpdateUserSchema, type User } from '@/services/user/user.schema'
-import { useCreateUserMutation, useUpdateUserMutation } from '@/hooks/users/useMutation.user'
+import { CreateClientSchema, UpdateClientSchema, type Client } from '@/services/client/client.schema'
+import { useCreateClientMutation, useUpdateClientMutation } from '@/hooks/clients/useMutation.client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
-interface UserFormProps {
-  user?: User
+interface ClientFormProps {
+  client?: Client
   dialogId?: string
 }
 
-export default function UserForm({ user, dialogId }: UserFormProps) {
-  const isEditing = !!user
+export default function ClientForm({ client, dialogId }: ClientFormProps) {
+  const isEditing = !!client
   const mutation = isEditing 
-    ? useUpdateUserMutation(user.id, { dialogId }) 
-    : useCreateUserMutation({ dialogId })
-  const schema = isEditing ? UpdateUserSchema : CreateUserSchema
+    ? useUpdateClientMutation(client.id, { dialogId }) 
+    : useCreateClientMutation({ dialogId })
+  const schema = isEditing ? UpdateClientSchema : CreateClientSchema
 
   const defaultValues = isEditing
     ? {
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        name: client.name,
+        email: client.email,
+        phone: client.phone,
       }
     : {
         name: '',
         email: '',
-        password: '',
-        confirm_password: '',
-        role: '',
+        phone: '',
       }
 
   const form = useForm({
@@ -72,15 +63,15 @@ export default function UserForm({ user, dialogId }: UserFormProps) {
 
       if (isEditing) {
         toast.promise(mutation.mutateAsync(dataToSubmit), {
-          loading: 'Actualizando usuario...',
-          success: 'Usuario actualizado exitosamente',
-          error: (err) => (err as Error).message || 'Error al actualizar usuario',
+          loading: 'Actualizando cliente...',
+          success: 'Cliente actualizado exitosamente',
+          error: (err) => (err as Error).message || 'Error al actualizar cliente',
         })
       } else {
         toast.promise(mutation.mutateAsync(dataToSubmit), {
-          loading: 'Creando usuario...',
-          success: 'Usuario creado exitosamente',
-          error: (err) => (err as Error).message || 'Error al crear usuario',
+          loading: 'Creando cliente...',
+          success: 'Cliente creado exitosamente',
+          error: (err) => (err as Error).message || 'Error al crear cliente',
         })
       }
     },
@@ -116,7 +107,7 @@ export default function UserForm({ user, dialogId }: UserFormProps) {
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="Juan Pérez"
+              placeholder="Empresa ABC"
               disabled={mutation.isPending}
             />
             {field.state.meta.errors?.length > 0 && (
@@ -148,7 +139,7 @@ export default function UserForm({ user, dialogId }: UserFormProps) {
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
-              placeholder="juan@example.com"
+              placeholder="contacto@empresa.com"
               disabled={mutation.isPending}
             />
             {field.state.meta.errors?.length > 0 && (
@@ -158,33 +149,30 @@ export default function UserForm({ user, dialogId }: UserFormProps) {
         )}
       />
 
-      {/* Rol */}
+      {/* Teléfono */}
       <form.Field
-        name="role"
+        name="phone"
         validators={{
           onChange: ({ value }) => {
-            if (!value) return 'El rol es requerido'
+            if (!value) return 'El teléfono es requerido'
+            if (value.length < 1) return 'El teléfono es requerido'
             return undefined
           },
         }}
         children={(field) => (
           <div>
             <label htmlFor={field.name} className="text-sm font-medium">
-              Rol
+              Teléfono
             </label>
-            <Select
+            <Input
+              id={field.name}
+              name={field.name}
               value={field.state.value}
-              onValueChange={field.handleChange}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+              placeholder="+34 123 456 789"
               disabled={mutation.isPending}
-            >
-              <SelectTrigger id={field.name}>
-                <SelectValue placeholder="Selecciona un rol" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="user">Usuario</SelectItem>
-              </SelectContent>
-            </Select>
+            />
             {field.state.meta.errors?.length > 0 && (
               <p className="text-sm text-destructive mt-1">{field.state.meta.errors[0]}</p>
             )}
@@ -192,74 +180,8 @@ export default function UserForm({ user, dialogId }: UserFormProps) {
         )}
       />
 
-      {/* Password y Confirm Password (solo para crear) */}
-      {!isEditing && (
-        <>
-          <form.Field
-            name="password"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'La contraseña es requerida'
-                if (value.length < 6) return 'La contraseña debe tener al menos 6 caracteres'
-                return undefined
-              },
-            }}
-            children={(field) => (
-              <div>
-                <label htmlFor={field.name} className="text-sm font-medium">
-                  Contraseña
-                </label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  type="password"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="••••••••"
-                  disabled={mutation.isPending}
-                />
-                {field.state.meta.errors?.length > 0 && (
-                  <p className="text-sm text-destructive mt-1">{field.state.meta.errors[0]}</p>
-                )}
-              </div>
-            )}
-          />
-
-          <form.Field
-            name="confirm_password"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'La confirmación de contraseña es requerida'
-                return undefined
-              },
-            }}
-            children={(field) => (
-              <div>
-                <label htmlFor={field.name} className="text-sm font-medium">
-                  Confirmar Contraseña
-                </label>
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  type="password"
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="••••••••"
-                  disabled={mutation.isPending}
-                />
-                {field.state.meta.errors?.length > 0 && (
-                  <p className="text-sm text-destructive mt-1">{field.state.meta.errors[0]}</p>
-                )}
-              </div>
-            )}
-          />
-        </>
-      )}
-
       <Button type="submit" disabled={mutation.isPending} className="w-full">
-        {isEditing ? 'Actualizar Usuario' : 'Crear Usuario'}
+        {isEditing ? 'Actualizar Cliente' : 'Crear Cliente'}
       </Button>
     </form>
   )

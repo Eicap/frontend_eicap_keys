@@ -6,7 +6,7 @@ import type { Paginated, QueryParams } from '../pagination.schema';
 class UserService {
     async login(login: Login): Promise<string> {
         try {
-            const response = await api.post('/users/login', login)
+            const response = await api.post('/auth/login', login)
             return response.data.token
         } catch (error) {
             if (axios.isAxiosError(error)) {

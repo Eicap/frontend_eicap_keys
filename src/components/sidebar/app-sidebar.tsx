@@ -60,7 +60,11 @@ const data = {
         {
           title: "Usuarios",
           url: "/users",
-        }
+        },
+        {
+          title: "Clientes",
+          url: "/clients",
+        },
       ]
     },
     {

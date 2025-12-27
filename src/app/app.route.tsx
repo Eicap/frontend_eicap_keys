@@ -1,9 +1,6 @@
 import { Route, Routes, Navigate } from "react-router-dom";
-import SigninForm from "./auth/components/SigninForm";
-import AuthRoute from "./auth/auth.route";
 import KeyForm from "./key/components/KeyForm";
 import InactiveKeyList from "./key/components/InactiveKeyList";
-import DashboardLayout from "./layout/DashboardLayout";
 import ClientForm from "./client/components/ClientForm";
 import ClientKeysView from "./client/components/ClientKeysView";
 import KeyReports from "./reports/components/KeyReports";
@@ -12,46 +9,35 @@ export default function AppRoute() {
   return (
     <div className="h-screen">
       <Routes>
-        <Route index element={<SigninForm />} />
-        <Route path="/signin/*" element={<AuthRoute />} />
         <Route
           path="/client/dashboard"
           element={
-            <DashboardLayout>
-              <ClientForm />
-            </DashboardLayout>
+            <ClientForm />
           }
         />
         <Route
           path="/client/:clientId/keys"
           element={
-            <DashboardLayout>
-              <ClientKeysView />
-            </DashboardLayout>
+            <ClientKeysView />
           }
         />
         <Route
           path="/key/dashboard"
           element={
-            <DashboardLayout>
-              <KeyForm />
-            </DashboardLayout>
+            <KeyForm />
           }
         />
         <Route
           path="/key/inactive"
           element={
-            <DashboardLayout>
-              <InactiveKeyList />
-            </DashboardLayout>
+            <InactiveKeyList />
           }
         />
         <Route
           path="/reports"
           element={
-            <DashboardLayout>
-              <KeyReports />
-            </DashboardLayout>
+
+            <KeyReports />
           }
         />
         {/* Catch-all route - redirect to home */}

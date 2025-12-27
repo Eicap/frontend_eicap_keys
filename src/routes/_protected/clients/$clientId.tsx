@@ -1,31 +1,31 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useEffect } from 'react'
-import { useGetUser } from '@/hooks/users/useQuery.user'
+import { useGetClient } from '@/hooks/clients/useQuery.client'
 import { useBreadcrumbStore } from '@/store/breadcrumb'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, Mail, Shield } from 'lucide-react'
+import { AlertCircle, Mail, Phone, Building2 } from 'lucide-react'
 import { breadcrumb } from '@/constants/breadcrumb'
 
-export const Route = createFileRoute('/_protected/users/$userId')({
+export const Route = createFileRoute('/_protected/clients/$clientId')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { userId } = Route.useParams()
+  const { clientId } = Route.useParams()
   const setBreadcrumbs = useBreadcrumbStore((state) => state.setBreadcrumbs)
-  const { data: user, isLoading: loading, error }= useGetUser(userId)
+  const { data: client, isLoading: loading, error } = useGetClient(clientId)
 
   useEffect(() => {
-    if (user) {
-      const { label, path } = breadcrumb.user(userId, user.name)
+    if (client) {
+      const { label, path } = breadcrumb.client(clientId, client.name)
       setBreadcrumbs([
-        { label: breadcrumb.users.label, path: breadcrumb.users.path },
+        { label: breadcrumb.clients.label, path: breadcrumb.clients.path },
         { label, path }
       ])
     }
-  }, [user, userId, setBreadcrumbs])
+  }, [client, clientId, setBreadcrumbs])
 
   if (loading) {
     return (
@@ -49,16 +49,16 @@ function RouteComponent() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>{error instanceof Error ? error.message : 'Error al cargar el usuario'}</AlertDescription>
+        <AlertDescription>{error instanceof Error ? error.message : 'Error al cargar el cliente'}</AlertDescription>
       </Alert>
     )
   }
 
-  if (!user) {
+  if (!client) {
     return (
       <Alert>
         <AlertCircle className="h-4 w-4" />
-        <AlertDescription>Usuario no encontrado</AlertDescription>
+        <AlertDescription>Cliente no encontrado</AlertDescription>
       </Alert>
     )
   }
@@ -66,34 +66,42 @@ function RouteComponent() {
   return (
     <div className="space-y-6 items-center">
       <div>
-        <h1 className="text-3xl font-bold">{user.name}</h1>
-        <p className="text-muted-foreground">Detalles del usuario</p>
+        <h1 className="text-3xl font-bold">{client.name}</h1>
+        <p className="text-muted-foreground">Detalles del cliente</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Información Personal</CardTitle>
+          <CardTitle>Información del Cliente</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-muted-foreground" />
+            <Building2 className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="font-medium">{user.email}</p>
+              <p className="text-sm text-muted-foreground">Nombre</p>
+              <p className="font-medium">{client.name}</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <Shield className="h-5 w-5 text-muted-foreground" />
+            <Mail className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm text-muted-foreground">Rol</p>
-              <p className="font-medium capitalize">{user.role}</p>
+              <p className="text-sm text-muted-foreground">Email</p>
+              <p className="font-medium">{client.email}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Phone className="h-5 w-5 text-muted-foreground" />
+            <div>
+              <p className="text-sm text-muted-foreground">Teléfono</p>
+              <p className="font-medium">{client.phone}</p>
             </div>
           </div>
 
           <div className="pt-2">
             <p className="text-sm text-muted-foreground">ID</p>
-            <p className="font-mono text-xs text-muted-foreground">{user.id}</p>
+            <p className="font-mono text-xs text-muted-foreground">{client.id}</p>
           </div>
         </CardContent>
       </Card>
