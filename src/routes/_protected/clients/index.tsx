@@ -124,35 +124,36 @@ function Clients() {
 
   return (
     <div className="flex flex-col gap-8 p-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
-              <p className="text-muted-foreground mt-1">Gestiona los clientes del sistema</p>
-            </div>
-            <Button onClick={handleOpenCreateDialog}>Nuevo Cliente</Button>
-          </div>
-    
-          <DataTable
-            columns={columns}
-            data={data?.data || []}
-            total={data?.total || 0}
-            offset={data?.offset || 0}
-            limit={limit}
-            onOffsetChange={setOffset}
-            onLimitChange={setLimit}
-            loading={isLoading}
-            search={{
-              query: searchQuery,
-              field: searchField,
-              onQueryChange: setSearchQuery,
-              onFieldChange: setSearchField,
-              columns: [
-                { key: 'name', label: 'Nombre' },
-                { key: 'email', label: 'Email' },
-                { key: 'phone', label: 'Teléfono' },
-              ]
-            }}
-          />
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Clientes</h1>
+          <p className="text-muted-foreground mt-1">Gestiona los clientes del sistema</p>
         </div>
+        <Button onClick={handleOpenCreateDialog}>Nuevo Cliente</Button>
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={data?.data || []}
+        total={data?.total || 0}
+        offset={data?.offset || 0}
+        limit={limit}
+        onOffsetChange={setOffset}
+        onLimitChange={setLimit}
+        loading={isLoading}
+        search={{
+          query: searchQuery,
+          field: searchField,
+          onQueryChange: setSearchQuery,
+          onFieldChange: setSearchField,
+          columns: [
+            { key: 'name', label: 'Nombre' },
+            { key: 'email', label: 'Email' },
+            { key: 'phone', label: 'Teléfono' },
+          ]
+        }}
+      />
+
+    </div>
   )
 }

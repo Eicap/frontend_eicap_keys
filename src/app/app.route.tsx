@@ -2,7 +2,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import KeyForm from "./key/components/KeyForm";
 import InactiveKeyList from "./key/components/InactiveKeyList";
 import ClientForm from "./client/components/ClientForm";
-import ClientKeysView from "./client/components/ClientKeysView";
+import ClientKeysView from "./client/ClientKeysView";
 import KeyReports from "./reports/components/KeyReports";
 
 export default function AppRoute() {
