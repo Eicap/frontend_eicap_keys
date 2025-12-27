@@ -9,38 +9,117 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedUsersIndexRouteImport } from './routes/_protected/users/index'
+import { Route as ProtectedClientIndexRouteImport } from './routes/_protected/client/index'
+import { Route as ProtectedUsersUserIdRouteImport } from './routes/_protected/users/$userId'
+import { Route as ProtectedClientClientIdRouteImport } from './routes/_protected/client/$clientId'
 
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUsersIndexRoute = ProtectedUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedClientIndexRoute = ProtectedClientIndexRouteImport.update({
+  id: '/client/',
+  path: '/client/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedUsersUserIdRoute = ProtectedUsersUserIdRouteImport.update({
+  id: '/users/$userId',
+  path: '/users/$userId',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedClientClientIdRoute = ProtectedClientClientIdRouteImport.update({
+  id: '/client/$clientId',
+  path: '/client/$clientId',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/client/$clientId': typeof ProtectedClientClientIdRoute
+  '/users/$userId': typeof ProtectedUsersUserIdRoute
+  '/client': typeof ProtectedClientIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/client/$clientId': typeof ProtectedClientClientIdRoute
+  '/users/$userId': typeof ProtectedUsersUserIdRoute
+  '/client': typeof ProtectedClientIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/client/$clientId': typeof ProtectedClientClientIdRoute
+  '/_protected/users/$userId': typeof ProtectedUsersUserIdRoute
+  '/_protected/client/': typeof ProtectedClientIndexRoute
+  '/_protected/users/': typeof ProtectedUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/client/$clientId'
+    | '/users/$userId'
+    | '/client'
+    | '/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/client/$clientId'
+    | '/users/$userId'
+    | '/client'
+    | '/users'
+  id:
+    | '__root__'
+    | '/'
+    | '/_protected'
+    | '/_protected/dashboard'
+    | '/_protected/client/$clientId'
+    | '/_protected/users/$userId'
+    | '/_protected/client/'
+    | '/_protected/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +127,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/': {
+      id: '/_protected/users/'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof ProtectedUsersIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/client/': {
+      id: '/_protected/client/'
+      path: '/client'
+      fullPath: '/client'
+      preLoaderRoute: typeof ProtectedClientIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/$userId': {
+      id: '/_protected/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/users/$userId'
+      preLoaderRoute: typeof ProtectedUsersUserIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/client/$clientId': {
+      id: '/_protected/client/$clientId'
+      path: '/client/$clientId'
+      fullPath: '/client/$clientId'
+      preLoaderRoute: typeof ProtectedClientClientIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
+interface ProtectedRouteChildren {
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedClientClientIdRoute: typeof ProtectedClientClientIdRoute
+  ProtectedUsersUserIdRoute: typeof ProtectedUsersUserIdRoute
+  ProtectedClientIndexRoute: typeof ProtectedClientIndexRoute
+  ProtectedUsersIndexRoute: typeof ProtectedUsersIndexRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedClientClientIdRoute: ProtectedClientClientIdRoute,
+  ProtectedUsersUserIdRoute: ProtectedUsersUserIdRoute,
+  ProtectedClientIndexRoute: ProtectedClientIndexRoute,
+  ProtectedUsersIndexRoute: ProtectedUsersIndexRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
