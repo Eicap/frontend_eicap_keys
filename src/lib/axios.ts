@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, AxiosError } from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
-const axiosInstance: AxiosInstance = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +10,7 @@ const axiosInstance: AxiosInstance = axios.create({
 });
 
 // Interceptor para agregar el token JWT
-axiosInstance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("auth-token");
     if (token) {
@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
 );
 
 // Interceptor para manejar errores
-axiosInstance.interceptors.response.use(
+api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     console.error("API Error:", {
@@ -47,4 +47,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export default axiosInstance;
+export default api;

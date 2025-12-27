@@ -2,84 +2,6 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  --radius: 0.625rem;
-
-  /* Light theme colors (default) */
-  --background: oklch(0.97 0 0); /* Light gray background */
-  --foreground: oklch(0.2 0 0); /* Dark text */
-  --card: oklch(1 0 0); /* Pure white cards */
-  --card-foreground: oklch(0.15 0 0); /* Very dark text on cards */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.4 0.15 250); /* Stronger blue for primary */
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.93 0 0); /* Light gray for secondary */
-  --secondary-foreground: oklch(0.2 0 0);
-  --muted: oklch(0.94 0 0); /* Muted gray */
-  --muted-foreground: oklch(0.45 0 0); /* Medium gray text */
-  --accent: oklch(0.92 0 0); /* Accent gray */
-  --accent-foreground: oklch(0.2 0 0);
-  --destructive: oklch(0.55 0.25 27); /* Red for destructive */
-  --border: oklch(0.85 0 0); /* Visible borders */
-  --input: oklch(0.96 0 0); /* Light input backgrounds */
-  --ring: oklch(0.4 0.15 250); /* Focus ring */
-  --chart-1: oklch(0.55 0.22 250);
-  --chart-2: oklch(0.5 0.2 180);
-  --chart-3: oklch(0.45 0.18 350);
-  --chart-4: oklch(0.6 0.2 120);
-  --chart-5: oklch(0.65 0.22 60);
-  --sidebar: oklch(0.99 0 0); /* Almost white sidebar */
-  --sidebar-foreground: oklch(0.15 0 0); /* Very dark text */
-  --sidebar-primary: oklch(0.4 0.15 250); /* Blue for active items */
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.96 0.01 250); /* Very light blue tint for hover */
-  --sidebar-accent-foreground: oklch(0.2 0 0);
-  --sidebar-border: oklch(0.9 0 0); /* Visible sidebar border */
-  --sidebar-ring: oklch(0.4 0.15 250);
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -122,10 +44,42 @@ h1 {
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-.dark {
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f0f0f;
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
 
+.dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -149,7 +103,7 @@ h1 {
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.145 0 0);
+  --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -162,43 +116,8 @@ h1 {
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
   body {
     @apply bg-background text-foreground;
-  }
-}
-
-/* Custom Scrollbar Styles */
-@layer utilities {
-  /* Hide scrollbar but keep functionality - Landing page style */
-  .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
-  }
-
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-track {
-    @apply bg-muted rounded-lg;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-lg hover:bg-muted-foreground/50;
-  }
-
-  .scrollbar-thumb-gray-700::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/40;
-  }
-
-  .scrollbar-track-gray-800::-webkit-scrollbar-track {
-    @apply bg-muted;
   }
 }
