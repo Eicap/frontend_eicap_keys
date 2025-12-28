@@ -1,59 +1,39 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
+  BarChart3,
+  Building2,
   Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
+  Key,
+  PackageSearch,
   Settings2,
+  ShieldCheck,
   SquareTerminal,
-} from "lucide-react"
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
-import { NavMain } from "@/components/sidebar/nav-main"
-import { NavProjects } from "@/components/sidebar/nav-projects"
-import { NavUser } from "@/components/sidebar/nav-user"
-import { TeamSwitcher } from "@/components/sidebar/team-switcher"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-import { breadcrumb } from "@/constants/breadcrumb"
+import { NavMain } from "@/components/sidebar/nav-main";
+import { NavProjects } from "@/components/sidebar/nav-projects";
+import { NavUser } from "@/components/sidebar/nav-user";
+import { TeamSwitcher } from "@/components/sidebar/team-switcher";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
+import { breadcrumb } from "@/constants/breadcrumb";
+import { useAuthStore } from "@/store/auth";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
+      name: "EICAP",
+      logo: ShieldCheck,
+      plan: "Escuela de Capacitación",
     },
   ],
   navMain: [
     {
-      title: "Administración",
+      title: "Plataforma",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
@@ -61,48 +41,41 @@ const data = {
         {
           title: breadcrumb.users.label,
           url: breadcrumb.users.path,
+          icon: Users,
         },
         {
           title: breadcrumb.clients.label,
           url: breadcrumb.clients.path,
-        },
-      ]
-    },
-    {
-      title: "Llaves",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: breadcrumb.keys.label,
-          url: breadcrumb.keys.path,
-        },
-        {
-          title: breadcrumb.batchs.label,
-          url: breadcrumb.batchs.path,
+          icon: Building2,
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Llaves",
       url: "#",
-      icon: BookOpen,
+      icon: Key,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: breadcrumb.keys.label,
+          url: breadcrumb.keys.path,
+          icon: Key,
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: breadcrumb.batchs.label,
+          url: breadcrumb.batchs.path,
+          icon: PackageSearch,
         },
+      ],
+    },
+    {
+      title: "Reportes",
+      url: "#",
+      icon: BarChart3,
+      items: [
         {
-          title: "Tutorials",
+          title: "Estadísticas",
           url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          icon: TrendingUp,
         },
       ],
     },
@@ -115,18 +88,6 @@ const data = {
           title: "General",
           url: "#",
         },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
       ],
     },
   ],
@@ -136,20 +97,69 @@ const data = {
       url: "#",
       icon: Frame,
     },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+
+  // Crear las iniciales del usuario
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const getColorFromName = (name: string) => {
+    const colors = [
+      "bg-red-500",
+      "bg-orange-500",
+      "bg-amber-500",
+      "bg-yellow-500",
+      "bg-lime-500",
+      "bg-green-500",
+      "bg-emerald-500",
+      "bg-teal-500",
+      "bg-cyan-500",
+      "bg-sky-500",
+      "bg-blue-500",
+      "bg-indigo-500",
+      "bg-violet-500",
+      "bg-purple-500",
+      "bg-fuchsia-500",
+      "bg-pink-500",
+      "bg-rose-500",
+    ];
+
+    // Crear un hash simple del nombre
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Usar el hash para seleccionar un color
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
+  };
+
+  const userData = user
+    ? {
+        name: user.name,
+        email: user.email,
+        avatar: "", // No hay avatar en el backend
+        initials: getInitials(user.name),
+        color: getColorFromName(user.name),
+      }
+    : {
+        name: "Usuario",
+        email: "usuario@ejemplo.com",
+        avatar: "",
+        initials: "U",
+        color: "bg-gray-500",
+      };
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -160,9 +170,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

@@ -1,40 +1,37 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { DataTable } from '@/components/table/data-table'
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { breadcrumb } from '@/constants/breadcrumb'
-import { useGetAllKey } from '@/hooks/keys/useQuery.key'
-import { useTableFilters } from '@/hooks/use-table-filters'
-import type { Key } from '@/services/key/key.schema'
-import { useBreadcrumbStore } from '@/store/breadcrumb'
-import type { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontal } from 'lucide-react'
-import { useEffect } from 'react'
-import { useAppStore } from '@/store/app'
-import KeyForm from '@/components/modules/keys/key.form'
+import { createFileRoute } from "@tanstack/react-router";
+import { DataTable } from "@/components/table/data-table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { breadcrumb } from "@/constants/breadcrumb";
+import { useGetAllKey } from "@/hooks/keys/useQuery.key";
+import { useTableFilters } from "@/hooks/use-table-filters";
+import type { Key } from "@/services/key/key.schema";
+import { useBreadcrumbStore } from "@/store/breadcrumb";
+import type { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import { useEffect } from "react";
+import { useAppStore } from "@/store/app";
+import KeyForm from "@/components/modules/keys/key.form";
+import { Badge } from "@/components/ui/badge";
+import { statusColors, statusLabels } from "@/lib/status";
 
-export const Route = createFileRoute('/_protected/keys/')({
+export const Route = createFileRoute("/_protected/keys/")({
   component: Keys,
-})
+});
 
 function Keys() {
-  const {
-    offset,
-    limit,
-    searchQuery,
-    searchField,
-    setOffset,
-    setLimit,
-    setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'code' })
+  const { offset, limit, searchQuery, searchField, setOffset, setLimit, setSearchQuery, setSearchField } =
+    useTableFilters({ initialSearchField: "code" });
   const { setBreadcrumbs } = useBreadcrumbStore();
   const { openDialog } = useAppStore();
 
   useEffect(() => {
-    setBreadcrumbs([
-      { label: breadcrumb.keys.label, path: breadcrumb.keys.path }
-    ])
+    setBreadcrumbs([{ label: breadcrumb.keys.label, path: breadcrumb.keys.path }]);
   }, [setBreadcrumbs]);
 
   const { data, isLoading } = useGetAllKey({
@@ -45,58 +42,86 @@ function Keys() {
   });
 
   const handleUpdateKey = (key: Key) => {
-    const dialogId = `key-edit-${key.id}`
+    const dialogId = `key-edit-${key.id}`;
     openDialog({
       id: dialogId,
-      title: 'Editar Cliente',
+      title: "Editar Cliente",
       content: <KeyForm keyData={key} dialogId={dialogId} />,
       confirmText: undefined,
-      cancelText: 'Cerrar',
-    })
-  }
+      cancelText: "Cerrar",
+    });
+  };
 
   const columns: ColumnDef<Key>[] = [
     {
-      accessorKey: 'code',
-      header: 'Código',
+      accessorKey: "code",
+      header: "Código",
+      cell: ({ row }) => <span className="font-mono text-sm">{row.original.code}</span>,
     },
     {
-      accessorKey: 'key_type.name',
-      header: 'Tipo de Key',
+      accessorKey: "key_type.name",
+      header: "Tipo de Key",
+      cell: ({ row }) => row.original.key_type?.name || "-",
     },
     {
-      accessorKey: 'client.name',
-      header: 'Cliente',
-    },
-    {
-      accessorKey: 'state',
-      header: 'Estado',
-    },
-    {
-      accessorKey: 'init_date',
-      header: 'Fecha Inicio',
+      accessorKey: "client.name",
+      header: "Cliente",
       cell: ({ row }) => {
-        const date = row.original.init_date
-        if (!date) return '-'
-        const formatted = new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' })
-        return formatted === '01/01/2001' ? '-' : formatted
-      }
+        const client = row.original.client;
+        if (!client || !client.name) return <span className="text-muted-foreground">Sin asignar</span>;
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium">{client.name}</span>
+            <span className="text-xs text-muted-foreground">{client.email}</span>
+          </div>
+        );
+      },
     },
     {
-      accessorKey: 'due_date',
-      header: 'Fecha Vencimiento',
+      accessorKey: "state",
+      header: "Estado",
       cell: ({ row }) => {
-        const date = row.original.due_date
-        if (!date) return '-'
-        const formatted = new Date(date).toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' })
-        return formatted === '01/01/2001' ? '-' : formatted
-      }
+        const status = row.original.state;
+        return (
+          <Badge className={statusColors[status]} variant="outline">
+            {statusLabels[status]}
+          </Badge>
+        );
+      },
     },
     {
-      id: 'actions',
-      header: 'Acciones',
+      accessorKey: "init_date",
+      header: "Fecha Inicio",
       cell: ({ row }) => {
-        const key = row.original
+        const date = row.original.init_date;
+        if (!date || date === "0001-01-01 00:00:00") return "-";
+        const formatted = new Date(date).toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+        return formatted === "01/01/2001" ? "-" : formatted;
+      },
+    },
+    {
+      accessorKey: "due_date",
+      header: "Fecha Vencimiento",
+      cell: ({ row }) => {
+        const date = row.original.due_date;
+        if (!date || date === "0001-01-01 00:00:00") return "-";
+        const formatted = new Date(date).toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+        return formatted === "01/01/2001" ? "-" : formatted;
+      },
+    },
+    {
+      id: "actions",
+      header: "Acciones",
+      cell: ({ row }) => {
+        const key = row.original;
 
         return (
           <DropdownMenu>
@@ -108,23 +133,19 @@ function Keys() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/keys/${key.id}`
+                  window.location.href = `/keys/${key.id}`;
                 }}
               >
                 Ver detalles
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleUpdateKey(key)}
-              >
-                Editar
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleUpdateKey(key)}>Editar</DropdownMenuItem>
               <DropdownMenuItem className="text-red-600">Eliminar</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )
+        );
       },
     },
-  ]
+  ];
 
   return (
     <div className="flex flex-col gap-8 p-8">
@@ -151,13 +172,12 @@ function Keys() {
           onQueryChange: setSearchQuery,
           onFieldChange: setSearchField,
           columns: [
-            { key: 'code', label: 'Código' },
-            { key: 'client', label: 'Cliente' },
-            { key: 'key_type', label: 'Tipo de Key' },
-          ]
+            { key: "code", label: "Código" },
+            { key: "client", label: "Cliente" },
+            { key: "key_type", label: "Tipo de Key" },
+          ],
         }}
       />
-
     </div>
-  )
+  );
 }

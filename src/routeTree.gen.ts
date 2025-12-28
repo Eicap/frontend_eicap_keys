@@ -18,6 +18,7 @@ import { Route as ProtectedClientsIndexRouteImport } from './routes/_protected/c
 import { Route as ProtectedBatchsIndexRouteImport } from './routes/_protected/batchs/index'
 import { Route as ProtectedUsersUserIdRouteImport } from './routes/_protected/users/$userId'
 import { Route as ProtectedClientsClientIdRouteImport } from './routes/_protected/clients/$clientId'
+import { Route as ProtectedBatchsBatchIdRouteImport } from './routes/_protected/batchs/$batchId'
 
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
@@ -64,10 +65,16 @@ const ProtectedClientsClientIdRoute =
     path: '/clients/$clientId',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ProtectedBatchsBatchIdRoute = ProtectedBatchsBatchIdRouteImport.update({
+  id: '/batchs/$batchId',
+  path: '/batchs/$batchId',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/clients/$clientId': typeof ProtectedClientsClientIdRoute
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/clients/$clientId': typeof ProtectedClientsClientIdRoute
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/_protected/clients/$clientId': typeof ProtectedClientsClientIdRoute
   '/_protected/users/$userId': typeof ProtectedUsersUserIdRoute
   '/_protected/batchs/': typeof ProtectedBatchsIndexRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/batchs/$batchId'
     | '/clients/$clientId'
     | '/users/$userId'
     | '/batchs'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
+    | '/batchs/$batchId'
     | '/clients/$clientId'
     | '/users/$userId'
     | '/batchs'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_protected/dashboard'
+    | '/_protected/batchs/$batchId'
     | '/_protected/clients/$clientId'
     | '/_protected/users/$userId'
     | '/_protected/batchs/'
@@ -201,11 +213,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedClientsClientIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/batchs/$batchId': {
+      id: '/_protected/batchs/$batchId'
+      path: '/batchs/$batchId'
+      fullPath: '/batchs/$batchId'
+      preLoaderRoute: typeof ProtectedBatchsBatchIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
 interface ProtectedRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedBatchsBatchIdRoute: typeof ProtectedBatchsBatchIdRoute
   ProtectedClientsClientIdRoute: typeof ProtectedClientsClientIdRoute
   ProtectedUsersUserIdRoute: typeof ProtectedUsersUserIdRoute
   ProtectedBatchsIndexRoute: typeof ProtectedBatchsIndexRoute
@@ -216,6 +236,7 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedBatchsBatchIdRoute: ProtectedBatchsBatchIdRoute,
   ProtectedClientsClientIdRoute: ProtectedClientsClientIdRoute,
   ProtectedUsersUserIdRoute: ProtectedUsersUserIdRoute,
   ProtectedBatchsIndexRoute: ProtectedBatchsIndexRoute,
