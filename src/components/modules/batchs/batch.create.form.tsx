@@ -85,6 +85,7 @@ export default function BatchCreateForm({ dialogId }: BatchCreateFormProps) {
     openDialog({
       id: selectorDialogId,
       title: 'Seleccionar Cliente',
+      width: 'max-w-6xl',
       content: (
         <ClientSelector
           dialogId={selectorDialogId}
@@ -117,6 +118,7 @@ export default function BatchCreateForm({ dialogId }: BatchCreateFormProps) {
     openDialog({
       id: selectorDialogId,
       title: 'Seleccionar Tipo de Key',
+      width: 'max-w-6xl',
       content: (
         <KeyTypeSelector
           dialogId={selectorDialogId}

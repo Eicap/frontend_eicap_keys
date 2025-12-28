@@ -98,6 +98,7 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
     openDialog({
       id: selectorDialogId,
       title: 'Seleccionar Cliente',
+      width: 'max-w-6xl',
       content: (
         <ClientSelector
           onSelect={(client: Client) => {
