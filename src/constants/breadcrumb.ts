@@ -8,4 +8,6 @@ export const breadcrumb = {
     key: (keyId: string, keyCode: string) => ({ label: keyCode, path: `/keys/${keyId}` }),
     batchs: { label: 'Lotes', path: '/batchs' },
     batch: (batchId: string, batchName: string) => ({ label: batchName, path: `/batchs/${batchId}` }),
+    keyTypes: { label: 'Tipos de Llaves', path: '/key-types' },
+    keyType: (keyTypeId: string, keyTypeName: string) => ({ label: keyTypeName, path: `/key-types/${keyTypeId}` }),
 }

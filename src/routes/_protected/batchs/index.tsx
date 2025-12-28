@@ -11,6 +11,8 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useEffect } from 'react'
 import { useAppStore } from '@/store/app'
+import BatchForm from '@/components/modules/batchs/batch.form'
+import BatchCreateForm from '@/components/modules/batchs/batch.create.form'
 
 export const Route = createFileRoute('/_protected/batchs/')({
   component: Batchs,
@@ -43,10 +45,23 @@ function Batchs() {
     search_field: searchField,
   });
 
+  const handleCreateBatch = () => {
+    const dialogId = `batch-create-${Date.now()}`
+    openDialog({
+      id: dialogId,
+      title: 'Crear Lote',
+      content: <BatchCreateForm dialogId={dialogId} />,
+      confirmText: undefined,
+      cancelText: 'Cerrar',
+    })
+  };
+
   const handleUpdateBatch = (batch: Batch) => {
-    const dialogId = openDialog({
+    const dialogId = `batch-edit-${batch.id}`
+    openDialog({
+      id: dialogId,
       title: 'Editar Lote',
-      content: null,
+      content: <BatchForm batchData={batch} dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
     })
@@ -126,7 +141,7 @@ function Batchs() {
           <h1 className="text-3xl font-bold tracking-tight">Lotes</h1>
           <p className="text-muted-foreground mt-1">Gestiona los lotes del sistema</p>
         </div>
-        <Button>Nuevo Lote</Button>
+        <Button onClick={handleCreateBatch}>Nuevo Lote</Button>
       </div>
 
       <DataTable
@@ -149,7 +164,6 @@ function Batchs() {
           ]
         }}
       />
-
     </div>
   )
 }

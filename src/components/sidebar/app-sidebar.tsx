@@ -77,6 +77,10 @@ const data = {
           title: breadcrumb.keys.label,
           url: breadcrumb.keys.path,
         },
+        {
+          title: breadcrumb.batchs.label,
+          url: breadcrumb.batchs.path,
+        },
       ],
     },
     {

@@ -29,7 +29,7 @@ function Clients() {
     setSearchField
   } = useTableFilters({ initialSearchField: 'name' })
   const { setBreadcrumbs } = useBreadcrumbStore()
-  const { openDialog, updateDialog } = useAppStore()
+  const { openDialog } = useAppStore()
 
   useEffect(() => {
     setBreadcrumbs([
@@ -45,27 +45,25 @@ function Clients() {
   });
 
   const handleOpenCreateDialog = () => {
-    const dialogId = openDialog({
+    const dialogId = `client-create-${Date.now()}`
+    openDialog({
+      id: dialogId,
       title: 'Crear Nuevo Cliente',
-      content: null,
+      content: <ClientForm dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
-    })
-    updateDialog(dialogId, {
-      content: <ClientForm dialogId={dialogId} />,
     })
   }
 
   // Función para abrir el diálogo de editar usuario
   const handleOpenEditDialog = (client: Client) => {
-    const dialogId = openDialog({
+    const dialogId = `client-edit-${client.id}`
+    openDialog({
+      id: dialogId,
       title: 'Editar Cliente',
-      content: null,
+      content: <ClientForm client={client} dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
-    })
-    updateDialog(dialogId, {
-      content: <ClientForm client={client} dialogId={dialogId} />,
     })
   }
 

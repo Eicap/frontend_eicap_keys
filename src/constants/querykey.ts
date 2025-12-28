@@ -9,4 +9,6 @@ export const querykey = {
     key_histories: 'key_histories',
     batch: 'batch',
     batchs: 'batchs',
+    key_type: 'key_type',
+    key_types: 'key_types',
 }

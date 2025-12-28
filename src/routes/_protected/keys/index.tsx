@@ -29,7 +29,7 @@ function Keys() {
     setSearchField
   } = useTableFilters({ initialSearchField: 'code' })
   const { setBreadcrumbs } = useBreadcrumbStore();
-  const { openDialog, updateDialog } = useAppStore();
+  const { openDialog } = useAppStore();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -45,14 +45,13 @@ function Keys() {
   });
 
   const handleUpdateKey = (key: Key) => {
-    const dialogId = openDialog({
+    const dialogId = `key-edit-${key.id}`
+    openDialog({
+      id: dialogId,
       title: 'Editar Cliente',
-      content: null,
+      content: <KeyForm keyData={key} dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
-    })
-    updateDialog(dialogId, {
-      content: <KeyForm keyData={key} dialogId={dialogId} />,
     })
   }
 

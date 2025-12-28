@@ -33,7 +33,7 @@ function Users() {
     setSearchField 
   } = useTableFilters({ initialSearchField: 'name' })
   const { setBreadcrumbs } = useBreadcrumbStore()
-  const { openDialog, updateDialog } = useAppStore()
+  const { openDialog } = useAppStore()
 
   useEffect(() => {
     setBreadcrumbs([
@@ -50,27 +50,25 @@ function Users() {
 
   // Función para abrir el diálogo de crear usuario
   const handleOpenCreateDialog = () => {
-    const dialogId = openDialog({
+    const dialogId = `user-create-${Date.now()}`
+    openDialog({
+      id: dialogId,
       title: 'Crear Nuevo Usuario',
-      content: null,
+      content: <UserForm dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
-    })
-    updateDialog(dialogId, {
-      content: <UserForm dialogId={dialogId} />,
     })
   }
 
   // Función para abrir el diálogo de editar usuario
   const handleOpenEditDialog = (user: User) => {
-    const dialogId = openDialog({
+    const dialogId = `user-edit-${user.id}`
+    openDialog({
+      id: dialogId,
       title: 'Editar Usuario',
-      content: null,
+      content: <UserForm user={user} dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
-    })
-    updateDialog(dialogId, {
-      content: <UserForm user={user} dialogId={dialogId} />,
     })
   }
 

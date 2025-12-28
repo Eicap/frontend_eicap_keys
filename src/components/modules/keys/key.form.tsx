@@ -12,7 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ClientSelector } from './client-selector'
+import { ClientSelector } from '../clients/selector.client'
+import { useAppStore } from '@/store/app'
 import type { Client } from '@/services/client/client.schema'
 
 interface KeyFormProps {
@@ -22,7 +23,7 @@ interface KeyFormProps {
 
 export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
   const [selectedClient, setSelectedClient] = useState<{ id: string; name: string; email: string } | null>(keyData.client || null)
-  const [clientSelectorOpen, setClientSelectorOpen] = useState(false)
+  const { openDialog, closeDialog } = useAppStore()
   
   const mutation = useUpdateKeyMutation(keyData.id, { dialogId })
   const schema = KeyUpdateSchema
@@ -92,13 +93,27 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
     },
   })
 
-  const handleSelectClient = (client: Client) => {
-    setSelectedClient({
-      id: client.id,
-      name: client.name,
-      email: client.email,
+  const handleOpenClientSelector = () => {
+    const selectorDialogId = `key-edit-client-selector-${Date.now()}`
+    openDialog({
+      id: selectorDialogId,
+      title: 'Seleccionar Cliente',
+      content: (
+        <ClientSelector
+          onSelect={(client: Client) => {
+            setSelectedClient({
+              id: client.id,
+              name: client.name,
+              email: client.email,
+            })
+            form.setFieldValue('client_id', client.id)
+            closeDialog(selectorDialogId)
+          }}
+        />
+      ),
+      confirmText: undefined,
+      cancelText: 'Cerrar',
     })
-    form.setFieldValue('client_id', client.id)
   }
 
   return (
@@ -189,7 +204,7 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
             type="button"
             variant="outline"
             className="w-full justify-start text-left font-normal"
-            onClick={() => setClientSelectorOpen(true)}
+            onClick={handleOpenClientSelector}
             disabled={mutation.isPending}
           >
             {selectedClient ? selectedClient.name : 'Selecciona un cliente'}
@@ -257,12 +272,6 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
           Actualizar Key
         </Button>
       </form>
-
-      <ClientSelector
-        open={clientSelectorOpen}
-        onClose={() => setClientSelectorOpen(false)}
-        onSelect={handleSelectClient}
-      />
     </>
   )
 }

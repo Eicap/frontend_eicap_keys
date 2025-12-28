@@ -1,18 +1,17 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DataTable } from '@/components/table/data-table'
 import { useQueryClient } from '@/hooks/clients/useQuery.client'
 import { useTableFilters } from '@/hooks/use-table-filters'
 import type { Client } from '@/services/client/client.schema'
 import type { ColumnDef } from '@tanstack/react-table'
+import { useAppStore } from '@/store/app'
 
 interface ClientSelectorProps {
-  open: boolean
-  onClose: () => void
   onSelect: (client: Client) => void
+  dialogId?: string
 }
 
-export function ClientSelector({ open, onClose, onSelect }: ClientSelectorProps) {
+export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
   const {
     offset,
     limit,
@@ -23,6 +22,7 @@ export function ClientSelector({ open, onClose, onSelect }: ClientSelectorProps)
     setSearchQuery,
     setSearchField
   } = useTableFilters({ initialSearchField: 'name' })
+  const { closeDialog } = useAppStore()
 
   const { data, isLoading } = useQueryClient({
     offset,
@@ -32,8 +32,15 @@ export function ClientSelector({ open, onClose, onSelect }: ClientSelectorProps)
   })
 
   const handleSelectClient = (client: Client) => {
+    console.log('[ClientSelector] Cliente seleccionado:', client)
     onSelect(client)
-    onClose()
+    if (dialogId) {
+      // Usar setTimeout para garantizar que React procese completamente todos los cambios de estado
+      setTimeout(() => {
+        console.log('[ClientSelector] Cerrando dialog:', dialogId)
+        closeDialog(dialogId)
+      }, 100)
+    }
   }
 
   const columns: ColumnDef<Client>[] = [
@@ -68,34 +75,28 @@ export function ClientSelector({ open, onClose, onSelect }: ClientSelectorProps)
   ]
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Seleccionar Cliente</DialogTitle>
-        </DialogHeader>
-        
-        <DataTable
-          columns={columns}
-          data={data?.data || []}
-          total={data?.total || 0}
-          offset={data?.offset || 0}
-          limit={limit}
-          onOffsetChange={setOffset}
-          onLimitChange={setLimit}
-          loading={isLoading}
-          search={{
-            query: searchQuery,
-            field: searchField,
-            onQueryChange: setSearchQuery,
-            onFieldChange: setSearchField,
-            columns: [
-              { key: 'name', label: 'Nombre' },
-              { key: 'email', label: 'Email' },
-              { key: 'phone', label: 'Teléfono' },
-            ]
-          }}
-        />
-      </DialogContent>
-    </Dialog>
+    <div className="w-full">
+      <DataTable
+        columns={columns}
+        data={data?.data || []}
+        total={data?.total || 0}
+        offset={data?.offset || 0}
+        limit={limit}
+        onOffsetChange={setOffset}
+        onLimitChange={setLimit}
+        loading={isLoading}
+        search={{
+          query: searchQuery,
+          field: searchField,
+          onQueryChange: setSearchQuery,
+          onFieldChange: setSearchField,
+          columns: [
+            { key: 'name', label: 'Nombre' },
+            { key: 'email', label: 'Email' },
+            { key: 'phone', label: 'Teléfono' },
+          ]
+        }}
+      />
+    </div>
   )
 }

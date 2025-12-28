@@ -15,7 +15,7 @@ export interface DialogConfig {
 
 interface AppStore {
   dialogs: DialogConfig[]
-  openDialog: (dialog: Omit<DialogConfig, 'id'>) => string
+  openDialog: (dialog: DialogConfig) => string
   closeDialog: (id: string) => void
   closeAllDialogs: () => void
   updateDialog: (id: string, updates: Partial<DialogConfig>) => void
@@ -25,11 +25,10 @@ export const useAppStore = create<AppStore>((set) => ({
   dialogs: [],
 
   openDialog: (dialog) => {
-    const id = `dialog-${Date.now()}-${Math.random()}`
     set((state) => ({
-      dialogs: [{ ...dialog, id }, ...state.dialogs],
+      dialogs: [dialog, ...state.dialogs],
     }))
-    return id
+    return dialog.id
   },
 
   closeDialog: (id) => {
@@ -49,4 +48,3 @@ export const useAppStore = create<AppStore>((set) => ({
       ),
     }))
   },
-}))
