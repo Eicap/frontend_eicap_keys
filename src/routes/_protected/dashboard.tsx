@@ -1,20 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { BarChart3, CheckSquare2, FolderOpen, Users } from 'lucide-react'
+import { createFileRoute } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart3, CheckSquare2, FolderOpen, Users } from "lucide-react";
 
-export const Route = createFileRoute('/_protected/dashboard')({
+export const Route = createFileRoute("/_protected/dashboard")({
   component: Dashboard,
-})
+});
 
 function Dashboard() {
-
   return (
     <div className="flex flex-col gap-8 p-8">
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Bienvenido a Carpyen</p>
+          <p className="text-muted-foreground mt-1">Bienvenido a EICAP</p>
         </div>
       </div>
 
@@ -82,12 +81,18 @@ function Dashboard() {
             <CardTitle>Acciones Rápidas</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button className="w-full" variant="outline">Nuevo Proyecto</Button>
-            <Button className="w-full" variant="outline">Nueva Tarea</Button>
-            <Button className="w-full" variant="outline">Invitar Equipo</Button>
+            <Button className="w-full" variant="outline">
+              Nuevo Proyecto
+            </Button>
+            <Button className="w-full" variant="outline">
+              Nueva Tarea
+            </Button>
+            <Button className="w-full" variant="outline">
+              Invitar Equipo
+            </Button>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }
