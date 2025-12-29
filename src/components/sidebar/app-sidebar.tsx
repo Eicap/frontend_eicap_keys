@@ -73,8 +73,8 @@ const data = {
       icon: BarChart3,
       items: [
         {
-          title: "Estadísticas",
-          url: "#",
+          title: breadcrumb.reports.label,
+          url: breadcrumb.reports.path,
           icon: TrendingUp,
         },
       ],

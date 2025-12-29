@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProtectedReportsRouteImport } from './routes/_protected/reports'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedUsersIndexRouteImport } from './routes/_protected/users/index'
 import { Route as ProtectedKeysIndexRouteImport } from './routes/_protected/keys/index'
 import { Route as ProtectedClientsIndexRouteImport } from './routes/_protected/clients/index'
 import { Route as ProtectedBatchsIndexRouteImport } from './routes/_protected/batchs/index'
 import { Route as ProtectedUsersUserIdRouteImport } from './routes/_protected/users/$userId'
+import { Route as ProtectedKeysKeysRouteImport } from './routes/_protected/keys/$keys'
 import { Route as ProtectedClientsClientIdRouteImport } from './routes/_protected/clients/$clientId'
 import { Route as ProtectedBatchsBatchIdRouteImport } from './routes/_protected/batchs/$batchId'
 
@@ -28,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   id: '/dashboard',
@@ -59,6 +66,11 @@ const ProtectedUsersUserIdRoute = ProtectedUsersUserIdRouteImport.update({
   path: '/users/$userId',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedKeysKeysRoute = ProtectedKeysKeysRouteImport.update({
+  id: '/keys/$keys',
+  path: '/keys/$keys',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedClientsClientIdRoute =
   ProtectedClientsClientIdRouteImport.update({
     id: '/clients/$clientId',
@@ -74,8 +86,10 @@ const ProtectedBatchsBatchIdRoute = ProtectedBatchsBatchIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/reports': typeof ProtectedReportsRoute
   '/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/clients/$clientId': typeof ProtectedClientsClientIdRoute
+  '/keys/$keys': typeof ProtectedKeysKeysRoute
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
   '/clients': typeof ProtectedClientsIndexRoute
@@ -85,8 +99,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/reports': typeof ProtectedReportsRoute
   '/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/clients/$clientId': typeof ProtectedClientsClientIdRoute
+  '/keys/$keys': typeof ProtectedKeysKeysRoute
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
   '/clients': typeof ProtectedClientsIndexRoute
@@ -98,8 +114,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/reports': typeof ProtectedReportsRoute
   '/_protected/batchs/$batchId': typeof ProtectedBatchsBatchIdRoute
   '/_protected/clients/$clientId': typeof ProtectedClientsClientIdRoute
+  '/_protected/keys/$keys': typeof ProtectedKeysKeysRoute
   '/_protected/users/$userId': typeof ProtectedUsersUserIdRoute
   '/_protected/batchs/': typeof ProtectedBatchsIndexRoute
   '/_protected/clients/': typeof ProtectedClientsIndexRoute
@@ -111,8 +129,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/reports'
     | '/batchs/$batchId'
     | '/clients/$clientId'
+    | '/keys/$keys'
     | '/users/$userId'
     | '/batchs'
     | '/clients'
@@ -122,8 +142,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
+    | '/reports'
     | '/batchs/$batchId'
     | '/clients/$clientId'
+    | '/keys/$keys'
     | '/users/$userId'
     | '/batchs'
     | '/clients'
@@ -134,8 +156,10 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_protected/dashboard'
+    | '/_protected/reports'
     | '/_protected/batchs/$batchId'
     | '/_protected/clients/$clientId'
+    | '/_protected/keys/$keys'
     | '/_protected/users/$userId'
     | '/_protected/batchs/'
     | '/_protected/clients/'
@@ -163,6 +187,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_protected/reports': {
+      id: '/_protected/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ProtectedReportsRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/dashboard': {
       id: '/_protected/dashboard'
@@ -206,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedUsersUserIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/keys/$keys': {
+      id: '/_protected/keys/$keys'
+      path: '/keys/$keys'
+      fullPath: '/keys/$keys'
+      preLoaderRoute: typeof ProtectedKeysKeysRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/clients/$clientId': {
       id: '/_protected/clients/$clientId'
       path: '/clients/$clientId'
@@ -225,8 +263,10 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedReportsRoute: typeof ProtectedReportsRoute
   ProtectedBatchsBatchIdRoute: typeof ProtectedBatchsBatchIdRoute
   ProtectedClientsClientIdRoute: typeof ProtectedClientsClientIdRoute
+  ProtectedKeysKeysRoute: typeof ProtectedKeysKeysRoute
   ProtectedUsersUserIdRoute: typeof ProtectedUsersUserIdRoute
   ProtectedBatchsIndexRoute: typeof ProtectedBatchsIndexRoute
   ProtectedClientsIndexRoute: typeof ProtectedClientsIndexRoute
@@ -236,8 +276,10 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedReportsRoute: ProtectedReportsRoute,
   ProtectedBatchsBatchIdRoute: ProtectedBatchsBatchIdRoute,
   ProtectedClientsClientIdRoute: ProtectedClientsClientIdRoute,
+  ProtectedKeysKeysRoute: ProtectedKeysKeysRoute,
   ProtectedUsersUserIdRoute: ProtectedUsersUserIdRoute,
   ProtectedBatchsIndexRoute: ProtectedBatchsIndexRoute,
   ProtectedClientsIndexRoute: ProtectedClientsIndexRoute,
