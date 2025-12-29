@@ -155,7 +155,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       }
     : {
         name: "Usuario",
-        email: "usuario@ejemplo.com",
+        email: "usuario@gmail.com",
         avatar: "",
         initials: "U",
         color: "bg-gray-500",
