@@ -9,6 +9,7 @@ class KeyService {
       const response = await api.get("/keys", {
         params: opts,
       });
+      console.log("🤣🤣🤣", response.data);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
