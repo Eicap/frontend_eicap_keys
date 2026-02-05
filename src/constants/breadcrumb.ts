@@ -11,4 +11,6 @@ export const breadcrumb = {
   batch: (batchId: string, batchName: string) => ({ label: batchName, path: `/batchs/${batchId}` }),
   keyTypes: { label: "Tipos de Llaves", path: "/key-types" },
   keyType: (keyTypeId: string, keyTypeName: string) => ({ label: keyTypeName, path: `/key-types/${keyTypeId}` }),
+  computers: { label: "Computadoras", path: "/computer_info" },
+  computer: (computerId: string, computerName: string) => ({ label: computerName, path: `/computer_info/${computerId}` }),
 };

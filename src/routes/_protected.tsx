@@ -1,3 +1,4 @@
+import React from 'react'
 import { Navigate, createFileRoute, Outlet } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { useBreadcrumbStore } from '@/store/breadcrumb'
@@ -39,14 +40,16 @@ function ProtectedLayout() {
                 </BreadcrumbItem>
 
                 {breadcrumbs.map(({ label, path }, index) => (
-                  <BreadcrumbItem key={path}>
+                  <React.Fragment key={path}>
                     <BreadcrumbSeparator />
-                    {index === breadcrumbs.length - 1 ? (
-                      <BreadcrumbPage>{label}</BreadcrumbPage>
-                    ) : (
-                      <BreadcrumbLink href={path}>{label}</BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
+                    <BreadcrumbItem>
+                      {index === breadcrumbs.length - 1 ? (
+                        <BreadcrumbPage>{label}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink href={path}>{label}</BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </React.Fragment>
                 ))}
               </BreadcrumbList>
             </Breadcrumb>

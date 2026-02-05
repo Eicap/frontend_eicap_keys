@@ -32,6 +32,8 @@ function RouteComponent() {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(10);
 
+  console.log(batch);
+
   useEffect(() => {
     setBreadcrumbs([
       { label: breadcrumb.batchs.label, path: breadcrumb.batchs.path },

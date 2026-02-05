@@ -15,6 +15,7 @@ import { Route as ProtectedReportsRouteImport } from './routes/_protected/report
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedUsersIndexRouteImport } from './routes/_protected/users/index'
 import { Route as ProtectedKeysIndexRouteImport } from './routes/_protected/keys/index'
+import { Route as ProtectedComputer_infoIndexRouteImport } from './routes/_protected/computer_info/index'
 import { Route as ProtectedClientsIndexRouteImport } from './routes/_protected/clients/index'
 import { Route as ProtectedBatchsIndexRouteImport } from './routes/_protected/batchs/index'
 import { Route as ProtectedUsersUserIdRouteImport } from './routes/_protected/users/$userId'
@@ -51,6 +52,12 @@ const ProtectedKeysIndexRoute = ProtectedKeysIndexRouteImport.update({
   path: '/keys/',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedComputer_infoIndexRoute =
+  ProtectedComputer_infoIndexRouteImport.update({
+    id: '/computer_info/',
+    path: '/computer_info/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedClientsIndexRoute = ProtectedClientsIndexRouteImport.update({
   id: '/clients/',
   path: '/clients/',
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
   '/clients': typeof ProtectedClientsIndexRoute
+  '/computer_info': typeof ProtectedComputer_infoIndexRoute
   '/keys': typeof ProtectedKeysIndexRoute
   '/users': typeof ProtectedUsersIndexRoute
 }
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
   '/users/$userId': typeof ProtectedUsersUserIdRoute
   '/batchs': typeof ProtectedBatchsIndexRoute
   '/clients': typeof ProtectedClientsIndexRoute
+  '/computer_info': typeof ProtectedComputer_infoIndexRoute
   '/keys': typeof ProtectedKeysIndexRoute
   '/users': typeof ProtectedUsersIndexRoute
 }
@@ -121,6 +130,7 @@ export interface FileRoutesById {
   '/_protected/users/$userId': typeof ProtectedUsersUserIdRoute
   '/_protected/batchs/': typeof ProtectedBatchsIndexRoute
   '/_protected/clients/': typeof ProtectedClientsIndexRoute
+  '/_protected/computer_info/': typeof ProtectedComputer_infoIndexRoute
   '/_protected/keys/': typeof ProtectedKeysIndexRoute
   '/_protected/users/': typeof ProtectedUsersIndexRoute
 }
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/users/$userId'
     | '/batchs'
     | '/clients'
+    | '/computer_info'
     | '/keys'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/users/$userId'
     | '/batchs'
     | '/clients'
+    | '/computer_info'
     | '/keys'
     | '/users'
   id:
@@ -163,6 +175,7 @@ export interface FileRouteTypes {
     | '/_protected/users/$userId'
     | '/_protected/batchs/'
     | '/_protected/clients/'
+    | '/_protected/computer_info/'
     | '/_protected/keys/'
     | '/_protected/users/'
   fileRoutesById: FileRoutesById
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/keys'
       fullPath: '/keys'
       preLoaderRoute: typeof ProtectedKeysIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/computer_info/': {
+      id: '/_protected/computer_info/'
+      path: '/computer_info'
+      fullPath: '/computer_info'
+      preLoaderRoute: typeof ProtectedComputer_infoIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/clients/': {
@@ -270,6 +290,7 @@ interface ProtectedRouteChildren {
   ProtectedUsersUserIdRoute: typeof ProtectedUsersUserIdRoute
   ProtectedBatchsIndexRoute: typeof ProtectedBatchsIndexRoute
   ProtectedClientsIndexRoute: typeof ProtectedClientsIndexRoute
+  ProtectedComputer_infoIndexRoute: typeof ProtectedComputer_infoIndexRoute
   ProtectedKeysIndexRoute: typeof ProtectedKeysIndexRoute
   ProtectedUsersIndexRoute: typeof ProtectedUsersIndexRoute
 }
@@ -283,6 +304,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedUsersUserIdRoute: ProtectedUsersUserIdRoute,
   ProtectedBatchsIndexRoute: ProtectedBatchsIndexRoute,
   ProtectedClientsIndexRoute: ProtectedClientsIndexRoute,
+  ProtectedComputer_infoIndexRoute: ProtectedComputer_infoIndexRoute,
   ProtectedKeysIndexRoute: ProtectedKeysIndexRoute,
   ProtectedUsersIndexRoute: ProtectedUsersIndexRoute,
 }

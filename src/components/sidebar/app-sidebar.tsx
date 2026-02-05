@@ -48,6 +48,11 @@ const data = {
           url: breadcrumb.clients.path,
           icon: Building2,
         },
+        {
+          title: breadcrumb.computers.label,
+          url: breadcrumb.computers.path,
+          icon: Frame,
+        }
       ],
     },
     {

@@ -14,4 +14,6 @@ export const querykey = {
   key_type: "key_type",
   key_types: "key_types",
   dashboard: "dashboard",
+  computer_info: "computer_info",
+  computers_info: "computers_info",
 };

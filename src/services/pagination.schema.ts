@@ -37,10 +37,15 @@ const createQueryParams = (
   limit: number = 10,
   options?: Partial<QueryParams>
 ): QueryParams => {
+  // Si search está vacío, no incluir search ni search_field
+  const { search, search_field, ...restOptions } = options || {}
+  const searchOptions = search ? { search, search_field } : {}
+  
   return QueryParamsSchema.parse({
     offset,
     limit,
-    ...options,
+    ...restOptions,
+    ...searchOptions,
   })
 }
 

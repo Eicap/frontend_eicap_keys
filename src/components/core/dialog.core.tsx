@@ -106,7 +106,7 @@ function DialogInstance({ dialog, onConfirm, onCancel }: DialogInstanceProps) {
       }}
     >
       <DialogContent 
-        className="h-[80vh] flex flex-col p-0 gap-0"
+        className="h-auto max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden"
         onInteractOutside={(e) => e.preventDefault()}
         style={{
           width: getWidthValue(dialog.width),
