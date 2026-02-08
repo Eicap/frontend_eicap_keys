@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useEffect } from 'react'
+import ComputerConnections from '@/components/modules/computer_info/connections.computer_info'
 
 export const Route = createFileRoute('/_protected/computer_info/')({
   component: RouteComponent,
@@ -51,6 +52,18 @@ function RouteComponent() {
       id: dialogId,
       title: 'Editar Información de la Computadora',
       content: <ComputerInfoForm computerInfo={computerInfo} dialogId={dialogId} />,
+      confirmText: undefined,
+      cancelText: 'Cerrar',
+      width: 'max-w-sm',
+    })
+  }
+
+  const handleOpenConnections = (computerInfo: ComputerInfo) => {
+    const dialogId = `computer-info-connections-${computerInfo.id}`
+    openDialog({
+      id: dialogId,
+      title: `Conexiones de: ${computerInfo.computer_name}`,
+      content: <ComputerConnections computerInfo={computerInfo} />,
       confirmText: undefined,
       cancelText: 'Cerrar',
       width: 'max-w-sm',
@@ -110,13 +123,13 @@ function RouteComponent() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem
+              <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/computer_info/${computerInfo.id}`
+                  handleOpenConnections(computerInfo)
                 }}
               >
-                Ver detalles
-              </DropdownMenuItem> */}
+                Conecciones
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   handleOpenEditDialog(computerInfo)

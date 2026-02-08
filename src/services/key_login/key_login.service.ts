@@ -41,6 +41,17 @@ class KeyLoginService {
       throw new Error("Error al obtener el login");
     }
   }
+
+  async deleteComputerConnections(keyId: string): Promise<void> {
+    try {
+      await api.delete(`/key-logins/${keyId}/computer-connections`);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Error al eliminar las conexiones de la key");
+      }
+      throw new Error("Error al eliminar las conexiones de la key");
+    }
+  }
 }
 
 export const keyLoginService = new KeyLoginService();

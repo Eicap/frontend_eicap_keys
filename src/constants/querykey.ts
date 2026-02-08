@@ -16,4 +16,5 @@ export const querykey = {
   dashboard: "dashboard",
   computer_info: "computer_info",
   computers_info: "computers_info",
+  computer_connections: "computer_connections",
 };

@@ -12,3 +12,10 @@ export function useQueryComputerInfo(query: QueryParams) {
     })),
   })
 }
+
+export function useComputerConnections(id: string) {
+    return useQuery({
+    queryKey: [querykey.computer_connections, id],
+    queryFn: () => computerInfoService.getConnections(id),
+  })
+}
