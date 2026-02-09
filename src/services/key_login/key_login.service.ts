@@ -52,6 +52,28 @@ class KeyLoginService {
       throw new Error("Error al eliminar las conexiones de la key");
     }
   }
+
+  async deleteKeyConnections(keyId: string): Promise<void> {
+    try {
+      await api.delete(`/key-logins/${keyId}/key-connections`);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Error al eliminar las conexiones de la key");
+      }
+      throw new Error("Error al eliminar las conexiones de la key");
+    }
+  }
+
+  async deleteOneConnections(keyId: string, computerId: string): Promise<void> {
+    try {
+      await api.delete(`/key-logins/${keyId}/${computerId}/connection`);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Error al eliminar la conexión");
+      }
+      throw new Error("Error al eliminar la conexión");
+    } 
+  }
 }
 
 export const keyLoginService = new KeyLoginService();

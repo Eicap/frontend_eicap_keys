@@ -2,6 +2,7 @@ import axios from "axios";
 import type { Paginated, QueryParams } from "../pagination.schema";
 import type { Key, KeyUpdate } from "./key.schema";
 import api from "@/lib/axios";
+import type { ComputerInfo } from "../computer_info/computer_info.schema";
 
 class KeyService {
   async getAll(opts: QueryParams): Promise<Paginated<Key>> {
@@ -79,6 +80,18 @@ class KeyService {
         throw new Error(error.response?.data?.message || "Error al actualizar la key");
       }
       throw new Error("Error al actualizar la key");
+    }
+  }
+
+  async getConnections(id: string): Promise<ComputerInfo[]> {
+    try {
+      const response = await api.get(`/keys/${id}/connections`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(error.response?.data?.message || "Error al obtener las conexiones de la key");
+      }
+      throw new Error("Error al obtener las conexiones de la key");
     }
   }
 }

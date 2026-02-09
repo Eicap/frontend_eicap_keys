@@ -19,6 +19,7 @@ import { useAppStore } from "@/store/app";
 import KeyForm from "@/components/modules/keys/key.form";
 import { Badge } from "@/components/ui/badge";
 import { statusColors, statusLabels } from "@/lib/status";
+import KeysConnections from "@/components/modules/keys/connections.key";
 
 export const Route = createFileRoute("/_protected/keys/")({
   component: Keys,
@@ -51,6 +52,18 @@ function Keys() {
       cancelText: "Cerrar",
     });
   };
+
+  const handleOpenConnections = (key: Key) => {
+    const dialogId = `key-connections-${key.id}`
+    openDialog({
+      id: dialogId,
+      title: `Conexiones de: ${key.code}`,
+      content: <KeysConnections Key={key} />,
+      confirmText: undefined,
+      cancelText: 'Cerrar',
+      width: 'max-w-5xl',
+    })
+  }
 
   const columns: ColumnDef<Key>[] = [
     {
@@ -131,6 +144,13 @@ function Keys() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  handleOpenConnections(key)
+                }}
+              >
+                Conexiones
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
                   window.location.href = `/keys/${key.id}`;

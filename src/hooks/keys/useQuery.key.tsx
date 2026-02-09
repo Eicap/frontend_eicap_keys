@@ -53,3 +53,11 @@ export function useGetKeysByClient(clientId: string, query: QueryParams) {
     enabled: !!clientId,
   });
 }
+
+export function useGetKeyConnections(keyId: string) {
+  return useQuery({
+    queryKey: [querykey.key_connections, keyId],
+    queryFn: () => keyService.getConnections(keyId),
+    enabled: !!keyId,
+  });
+}

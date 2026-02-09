@@ -5,6 +5,7 @@ export const querykey = {
   clients: "clients",
   key: "key",
   keys: "keys",
+  key_connections: "key_connections",
   key_codes: "key_codes",
   key_histories: "key_histories",
   key_login: "key_login",

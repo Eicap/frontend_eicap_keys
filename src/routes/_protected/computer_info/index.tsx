@@ -128,7 +128,7 @@ function RouteComponent() {
                   handleOpenConnections(computerInfo)
                 }}
               >
-                Conecciones
+                Conexiones
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {

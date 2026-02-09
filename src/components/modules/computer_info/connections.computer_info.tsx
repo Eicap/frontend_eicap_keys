@@ -68,7 +68,7 @@ export default function ComputerConnections({ computerInfo }: RouteComponentProp
         variant="destructive"
         className="mb-4"
         onClick={handleDeleteConnections}
-        disabled={isLoading || data?.length === 0}
+        disabled={isLoading || data?.length === 0 || deleteConnections.isPending}
       >
         Elimar todas las conexiones
       </Button>
