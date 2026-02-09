@@ -4,6 +4,7 @@ import {
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table'
+import { useRef, useEffect, useState } from 'react'
 
 import {
     Table,
@@ -13,6 +14,33 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table'
+
+interface TruncateCellProps {
+    children: React.ReactNode
+}
+
+function TruncateCell({ children }: TruncateCellProps) {
+    const ref = useRef<HTMLDivElement>(null)
+    const [isTruncated, setIsTruncated] = useState(false)
+
+    useEffect(() => {
+        if (ref.current) {
+            setIsTruncated(ref.current.scrollWidth > ref.current.clientWidth)
+        }
+    }, [children])
+
+    const cellValue = ref.current?.textContent || ''
+
+    return (
+        <div
+            ref={ref}
+            className="truncate"
+            title={isTruncated ? cellValue : ''}
+        >
+            {children}
+        </div>
+    )
+}
 
 interface SimpleTableProps<TData> {
     columns: ColumnDef<TData>[]
@@ -40,9 +68,11 @@ export function SimpleTable<TData>({
                         {table.getHeaderGroups().map((headerGroup) =>
                             headerGroup.headers.map((header) => (
                                 <TableHead key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(header.column.columnDef.header, header.getContext())}
+                                    <div className="truncate">
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </div>
                                 </TableHead>
                             ))
                         )}
@@ -65,7 +95,9 @@ export function SimpleTable<TData>({
                                 )}
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        <TruncateCell>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TruncateCell>
                                     </TableCell>
                                 ))}
                             </TableRow>

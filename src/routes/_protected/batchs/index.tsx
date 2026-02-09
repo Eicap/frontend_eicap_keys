@@ -71,14 +71,17 @@ function Batchs() {
     {
       accessorKey: 'title',
       header: 'Título',
+      cell: ({ row }) => <span className="max-w-xs block">{row.original.title}</span>,
     },
     {
       accessorKey: 'quantity',
       header: 'Cantidad',
+      cell: ({ row }) => <span className="max-w-25 block">{row.original.quantity}</span>,
     },
     {
       accessorKey: 'description',
       header: 'Descripción',
+      cell: ({ row }) => <span className="max-w-25 block">{row.original.description}</span>,
     },
     {
       accessorKey: 'created_at',
