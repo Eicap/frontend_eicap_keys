@@ -16,19 +16,16 @@ export function KeyTypeSelector({ onSelect, dialogId }: KeyTypeSelectorProps) {
     offset,
     limit,
     searchQuery,
-    searchField,
     setOffset,
     setLimit,
     setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'name' })
+  } = useTableFilters()
   const { closeDialog } = useAppStore()
 
   const { data, isLoading } = useGetAllKeyType({
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   })
 
   const handleSelectKeyType = (keyType: KeyType) => {
@@ -83,13 +80,7 @@ export function KeyTypeSelector({ onSelect, dialogId }: KeyTypeSelectorProps) {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'name', label: 'Nombre' },
-            { key: 'description', label: 'Descripción' },
-          ]
         }}
       />
     </div>

@@ -16,19 +16,16 @@ export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
     offset,
     limit,
     searchQuery,
-    searchField,
     setOffset,
     setLimit,
     setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'name' })
+  } = useTableFilters()
   const { closeDialog } = useAppStore()
 
   const { data, isLoading } = useQueryClient({
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   })
 
   const handleSelectClient = (client: Client) => {
@@ -87,14 +84,7 @@ export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'name', label: 'Nombre' },
-            { key: 'email', label: 'Email' },
-            { key: 'phone', label: 'Teléfono' },
-          ]
         }}
       />
     </div>
