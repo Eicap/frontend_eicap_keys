@@ -1,16 +1,26 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useGetClient } from "@/hooks/clients/useQuery.client";
 import { useBreadcrumbStore } from "@/store/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Mail, Phone, Building2 } from "lucide-react";
+import { AlertCircle, Mail, Phone, Building2, MoreHorizontal } from "lucide-react";
 import { breadcrumb } from "@/constants/breadcrumb";
 import { useGetKeysByClient } from "@/hooks/keys/useQuery.key";
 import { DataTable } from "@/components/table/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Key } from "@/services/key/key.schema";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAppStore } from "@/store/app";
+import KeyForm from "@/components/modules/keys/key.form";
+import KeysConnections from "@/components/modules/keys/connections.key";
 
 export const Route = createFileRoute("/_protected/clients/$clientId")({
   component: RouteComponent,
@@ -19,6 +29,8 @@ export const Route = createFileRoute("/_protected/clients/$clientId")({
 function RouteComponent() {
   const { clientId } = Route.useParams();
   const setBreadcrumbs = useBreadcrumbStore((state) => state.setBreadcrumbs);
+  const { openDialog } = useAppStore();
+  const navigate = useNavigate();
   const { data: client, isLoading: loading, error } = useGetClient(clientId);
 
   const [offset, setOffset] = useState(0);
@@ -91,6 +103,61 @@ function RouteComponent() {
         return formatted === "01/01/2001" ? "-" : formatted;
       },
     },
+    {
+      id: "actions",
+      header: "Acciones",
+      cell: ({ row }) => {
+        const key = row.original;
+
+        const handleUpdateKey = () => {
+          const dialogId = `key-edit-${key.id}`;
+          openDialog({
+            id: dialogId,
+            title: "Editar Key",
+            content: <KeyForm keyData={key} dialogId={dialogId} />,
+            confirmText: undefined,
+            cancelText: "Cerrar",
+          });
+        };
+
+        const handleOpenConnections = () => {
+          const dialogId = `key-connections-${key.id}`;
+          openDialog({
+            id: dialogId,
+            title: `Conexiones de: ${key.code}`,
+            content: <KeysConnections Key={key} />,
+            confirmText: undefined,
+            cancelText: "Cerrar",
+            width: "max-w-5xl",
+          });
+        };
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleOpenConnections}>
+                Conexiones
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate({ to: `/keys/${key.id}` });
+                }}
+              >
+                Ver detalles
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleUpdateKey}>
+                Editar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
   ];
 
   if (loading) {
@@ -153,7 +220,7 @@ function RouteComponent() {
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div>
               <p className="text-sm text-muted-foreground">Email</p>
-              <p className="font-medium">{client.email}</p>
+              <p className="font-medium">{client.email || "-"}</p>
             </div>
           </div>
 
@@ -191,10 +258,7 @@ function RouteComponent() {
             loading={keysLoading}
             search={{
               query: searchQuery,
-              field: "code",
               onQueryChange: setSearchQuery,
-              onFieldChange: () => {},
-              columns: [{ key: "code", label: "Código" }],
             }}
           />
         </CardContent>

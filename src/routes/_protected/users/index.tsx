@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { type ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/table/data-table'
@@ -32,6 +32,7 @@ function Users() {
   } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore()
   const { openDialog } = useAppStore()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setBreadcrumbs([
@@ -111,7 +112,7 @@ function Users() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/users/${user.id}`
+                  navigate({ to: `/users/${user.id}` })
                 }}
               >
                 Ver detalles

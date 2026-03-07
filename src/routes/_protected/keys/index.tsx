@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +30,7 @@ function Keys() {
     useTableFilters();
   const { setBreadcrumbs } = useBreadcrumbStore();
   const { openDialog } = useAppStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBreadcrumbs([{ label: breadcrumb.keys.label, path: breadcrumb.keys.path }]);
@@ -152,7 +153,7 @@ function Keys() {
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/keys/${key.id}`;
+                  navigate({ to: `/keys/${key.id}` })
                 }}
               >
                 Ver detalles

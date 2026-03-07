@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Activity, AlertCircle, FolderOpen, Key, Package, TrendingUp, Users } from "lucide-react";
 import { useGetDashboardStats } from "@/hooks/dashboard/useQuery.dashboard";
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/_protected/dashboard")({
 
 function Dashboard() {
   const { data: stats, isLoading } = useGetDashboardStats();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -158,7 +159,7 @@ function Dashboard() {
                 <div
                   key={batch.id}
                   className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors cursor-pointer"
-                  onClick={() => (window.location.href = `/batchs/${batch.id}`)}
+                  onClick={() => navigate({ to: `/batchs/${batch.id}` })}
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/10">

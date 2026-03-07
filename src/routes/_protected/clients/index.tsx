@@ -8,7 +8,7 @@ import { useTableFilters } from '@/hooks/use-table-filters'
 import type { Client } from '@/services/client/client.schema'
 import { useAppStore } from '@/store/app'
 import { useBreadcrumbStore } from '@/store/breadcrumb'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 import { useEffect } from 'react'
@@ -28,6 +28,7 @@ function Clients() {
   } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore()
   const { openDialog } = useAppStore()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setBreadcrumbs([
@@ -97,7 +98,7 @@ function Clients() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/clients/${client.id}`
+                  navigate({ to: `/clients/${client.id}` })
                 }}
               >
                 Ver detalles

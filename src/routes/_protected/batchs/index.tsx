@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { DataTable } from '@/components/table/data-table'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -29,6 +29,7 @@ function Batchs() {
   } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore();
   const { openDialog } = useAppStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -116,7 +117,7 @@ function Batchs() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  window.location.href = `/batchs/${batch.id}`
+                  navigate({ to: `/batchs/${batch.id}` })
                 }}
               >
                 Ver detalles
