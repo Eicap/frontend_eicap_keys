@@ -5,10 +5,9 @@ import { useQuery } from "@tanstack/react-query"
 
 export function useQueryBatch(query: QueryParams) {
     return useQuery({
-    queryKey: [querykey.batchs, query.offset, query.limit, query.search, query.search_field],
+    queryKey: [querykey.batchs, query.offset, query.limit, query.search],
     queryFn: () => batchService.getAll(createQueryParams(query.offset, query.limit, {
       search: query.search,
-      search_field: query.search_field,
     })),
   })
 }

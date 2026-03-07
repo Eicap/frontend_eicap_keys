@@ -5,12 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useGetAllKey(query: QueryParams) {
   return useQuery({
-    queryKey: [querykey.keys, query.offset, query.limit, query.search, query.search_field],
+    queryKey: [querykey.keys, query.offset, query.limit, query.search],
     queryFn: () =>
       keyService.getAll(
         createQueryParams(query.offset, query.limit, {
           search: query.search,
-          search_field: query.search_field,
         })
       ),
   });

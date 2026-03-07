@@ -11,11 +11,13 @@ export const Route = createFileRoute('/')({
 })
 
 function Login() {
-  const { isAuthenticated, login, loading } = useAuthStore()
+  const checkIsAuthenticated = useAuthStore((state) => state.checkIsAuthenticated)
+  const login = useAuthStore((state) => state.login)
+  const loading = useAuthStore((state) => state.loading)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  if (isAuthenticated) {
+  if (checkIsAuthenticated()) {
     return <Navigate to="/dashboard" />
   }
 

@@ -23,12 +23,10 @@ function Batchs() {
     offset,
     limit,
     searchQuery,
-    searchField,
     setOffset,
     setLimit,
     setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'title' })
+  } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore();
   const { openDialog } = useAppStore();
 
@@ -42,7 +40,6 @@ function Batchs() {
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   });
 
   const handleCreateBatch = () => {
@@ -158,13 +155,7 @@ function Batchs() {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'title', label: 'Título' },
-            { key: 'description', label: 'Descripción' },
-          ]
         }}
       />
     </div>

@@ -54,10 +54,7 @@ function TruncateCell({ children }: TruncateCellProps) {
 
 interface SearchConfig {
   query: string
-  field: string
   onQueryChange: (query: string) => void
-  onFieldChange: (field: string) => void
-  columns: Array<{ key: string; label: string }>
 }
 
 interface DataTableProps<TData> {
@@ -121,18 +118,6 @@ export function DataTable<TData>({
               className="pl-10"
             />
           </div>
-          <Select value={search.field} onValueChange={search.onFieldChange}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Buscar por..." />
-            </SelectTrigger>
-            <SelectContent>
-              {search.columns.map((col) => (
-                <SelectItem key={col.key} value={col.key}>
-                  {col.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </div>
       )}
 

@@ -7,7 +7,6 @@ const QueryParamsSchema = z.object({
   order_by: z.string().optional(),
   sort_direction: z.enum(['asc', 'desc']).optional(),
   search: z.string().optional(),
-  search_field: z.string().optional(),
 })
 
 type QueryParams = z.infer<typeof QueryParamsSchema>
@@ -37,9 +36,9 @@ const createQueryParams = (
   limit: number = 10,
   options?: Partial<QueryParams>
 ): QueryParams => {
-  // Si search está vacío, no incluir search ni search_field
-  const { search, search_field, ...restOptions } = options || {}
-  const searchOptions = search ? { search, search_field } : {}
+  // Si search está vacío, no incluir search
+  const { search, ...restOptions } = options || {}
+  const searchOptions = search ? { search } : {}
   
   return QueryParamsSchema.parse({
     offset,

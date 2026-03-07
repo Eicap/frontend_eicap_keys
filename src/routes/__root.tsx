@@ -17,8 +17,8 @@ const queryClient = new QueryClient({
   }
 });
 
-export const Route = createRootRoute({
-  component: () => (
+function RootComponent() {
+  return (
     <QueryClientProvider client={queryClient}>
       <div className="flex flex-col min-h-screen">
         <main className="flex-1">
@@ -28,5 +28,9 @@ export const Route = createRootRoute({
         <Toaster />
       </div>
     </QueryClientProvider>
-  ),
+  )
+}
+
+export const Route = createRootRoute({
+  component: RootComponent,
 })

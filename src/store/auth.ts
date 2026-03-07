@@ -1,10 +1,10 @@
 import userService from "@/services/user/user.service";
 import type { User } from "@/services/user/user.schema";
+import { isTokenExpired } from "@/lib/jwt";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface AuthStore {
-  isAuthenticated: boolean;
   loading: boolean;
   token: string;
   user: User | null;
@@ -13,12 +13,12 @@ interface AuthStore {
   setUser: (user: User) => void;
   logout: () => void;
   fetchUserProfile: () => Promise<void>;
+  checkIsAuthenticated: () => boolean;
 }
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      isAuthenticated: false,
       loading: false,
       token: "",
       user: null,
@@ -27,7 +27,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ loading: true });
         try {
           const token = await userService.login({ email, password });
-          set({ token, isAuthenticated: true });
+          set({ token });
 
           // Obtener el perfil del usuario después del login
           await get().fetchUserProfile();
@@ -49,7 +49,7 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       setToken: (token: string) => {
-        set({ token, isAuthenticated: true });
+        set({ token });
       },
 
       setUser: (user: User) => {
@@ -57,14 +57,24 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
-        set({ isAuthenticated: false, token: "", user: null });
+        set({ token: "", user: null, });
+      },
+
+      // Verificar si el usuario está autenticado (token válido)
+      checkIsAuthenticated: () => {
+        const { token } = get();
+        if (!token) return false;
+        if (isTokenExpired(token)) {
+          get().logout();
+          return false;
+        }
+        return true;
       },
     }),
     {
       name: "auth-store",
       partialize: (state) => ({
         token: state.token,
-        isAuthenticated: state.isAuthenticated,
         user: state.user,
       }),
     }

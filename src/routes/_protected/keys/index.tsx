@@ -26,8 +26,8 @@ export const Route = createFileRoute("/_protected/keys/")({
 });
 
 function Keys() {
-  const { offset, limit, searchQuery, searchField, setOffset, setLimit, setSearchQuery, setSearchField } =
-    useTableFilters({ initialSearchField: "code" });
+  const { offset, limit, searchQuery, setOffset, setLimit, setSearchQuery } =
+    useTableFilters();
   const { setBreadcrumbs } = useBreadcrumbStore();
   const { openDialog } = useAppStore();
 
@@ -39,7 +39,6 @@ function Keys() {
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   });
 
   const handleUpdateKey = (key: Key) => {
@@ -188,14 +187,7 @@ function Keys() {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: "code", label: "Código" },
-            { key: "client", label: "Cliente" },
-            { key: "key_type", label: "Tipo de Key" },
-          ],
         }}
       />
     </div>

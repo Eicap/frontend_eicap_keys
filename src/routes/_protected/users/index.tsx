@@ -26,12 +26,10 @@ function Users() {
     offset, 
     limit, 
     searchQuery, 
-    searchField, 
     setOffset, 
     setLimit,
     setSearchQuery, 
-    setSearchField 
-  } = useTableFilters({ initialSearchField: 'name' })
+  } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore()
   const { openDialog } = useAppStore()
 
@@ -45,7 +43,6 @@ function Users() {
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   })
 
   // Función para abrir el diálogo de crear usuario
@@ -155,15 +152,7 @@ function Users() {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'name', label: 'Nombre' },
-            { key: 'email', label: 'Email' },
-            { key: 'phone', label: 'Teléfono' },
-            { key: 'role', label: 'Rol' },
-          ]
         }}
       />
     </div>

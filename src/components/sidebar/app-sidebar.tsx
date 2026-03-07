@@ -39,17 +39,17 @@ const data = {
       isActive: true,
       items: [
         {
-          title: breadcrumb.users.label,
+          title: "Usuarios",
           url: breadcrumb.users.path,
           icon: Users,
         },
         {
-          title: breadcrumb.clients.label,
+          title: "Clientes",
           url: breadcrumb.clients.path,
           icon: Building2,
         },
         {
-          title: breadcrumb.computers.label,
+          title: "Computadoras",
           url: breadcrumb.computers.path,
           icon: Frame,
         }
@@ -61,12 +61,12 @@ const data = {
       icon: Key,
       items: [
         {
-          title: breadcrumb.keys.label,
+          title: "Keys",
           url: breadcrumb.keys.path,
           icon: Key,
         },
         {
-          title: breadcrumb.batchs.label,
+          title: "Lotes",
           url: breadcrumb.batchs.path,
           icon: PackageSearch,
         },
@@ -78,7 +78,7 @@ const data = {
       icon: BarChart3,
       items: [
         {
-          title: breadcrumb.reports.label,
+          title: "Reportes",
           url: breadcrumb.reports.path,
           icon: TrendingUp,
         },

@@ -22,12 +22,10 @@ function Clients() {
     offset,
     limit,
     searchQuery,
-    searchField,
     setOffset,
     setLimit,
     setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'name' })
+  } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore()
   const { openDialog } = useAppStore()
 
@@ -41,7 +39,6 @@ function Clients() {
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   });
 
   const handleOpenCreateDialog = () => {
@@ -141,14 +138,7 @@ function Clients() {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'name', label: 'Nombre' },
-            { key: 'email', label: 'Email' },
-            { key: 'phone', label: 'Teléfono' },
-          ]
         }}
       />
 

@@ -115,14 +115,15 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-        className="space-y-4"
-      >
+      <div className="max-h-[60vh] overflow-y-auto pr-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+          className="space-y-4"
+        >
         {/* Código */}
         <form.Field
           name="code"
@@ -276,7 +277,8 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
         <Button type="submit" disabled={mutation.isPending} className="w-full">
           Actualizar Key
         </Button>
-      </form>
+        </form>
+      </div>
     </>
   );
 }

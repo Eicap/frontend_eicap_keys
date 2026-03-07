@@ -23,12 +23,10 @@ function RouteComponent() {
     offset,
     limit,
     searchQuery,
-    searchField,
     setOffset,
     setLimit,
     setSearchQuery,
-    setSearchField
-  } = useTableFilters({ initialSearchField: 'computer_name' })
+  } = useTableFilters()
   const { setBreadcrumbs } = useBreadcrumbStore()
   const { openDialog } = useAppStore()
 
@@ -42,7 +40,6 @@ function RouteComponent() {
     offset,
     limit,
     search: searchQuery,
-    search_field: searchField,
   });
 
   // Función para abrir el diálogo de editar usuario
@@ -164,16 +161,7 @@ function RouteComponent() {
         loading={isLoading}
         search={{
           query: searchQuery,
-          field: searchField,
           onQueryChange: setSearchQuery,
-          onFieldChange: setSearchField,
-          columns: [
-            { key: 'computer_name', label: 'Nombre' },
-            { key: 'ip', label: 'IP' },
-            { key: 'os', label: 'Sistema Operativo' },
-            { key: 'state', label: 'Estado' },
-            { key: 'mac_address', label: 'Dirección MAC' },
-          ]
         }}
       />
 

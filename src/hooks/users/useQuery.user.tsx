@@ -5,10 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export function useQueryUser(query: QueryParams) {
     return useQuery({
-    queryKey: [querykey.users, query.offset, query.limit, query.search, query.search_field],
+    queryKey: [querykey.users, query.offset, query.limit, query.search],
     queryFn: () => userService.getAll(createQueryParams(query.offset, query.limit, {
       search: query.search,
-      search_field: query.search_field,
     })),
   })
 }

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Navigate, createFileRoute, Outlet } from '@tanstack/react-router'
+import { Navigate, createFileRoute, Outlet, Link } from '@tanstack/react-router'
 import { useAuthStore } from '@/store/auth'
 import { useBreadcrumbStore } from '@/store/breadcrumb'
 import { AppSidebar } from '@/components/sidebar/app-sidebar'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import { Separator } from '@/components/ui/separator'
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { breadcrumb } from '@/constants/breadcrumb'
 
 export const Route = createFileRoute('/_protected')({
@@ -13,10 +13,10 @@ export const Route = createFileRoute('/_protected')({
 })
 
 function ProtectedLayout() {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const checkIsAuthenticated = useAuthStore((state) => state.checkIsAuthenticated)
   const breadcrumbs = useBreadcrumbStore((state) => state.breadcrumbs)
 
-  if (!isAuthenticated) {
+  if (!checkIsAuthenticated()) {
     return <Navigate to="/" />
   }
 
@@ -34,9 +34,9 @@ function ProtectedLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={breadcrumb.dashboard.path}>
+                  <Link to={breadcrumb.dashboard.path} className="text-sm font-medium text-muted-foreground hover:text-foreground">
                     {breadcrumb.dashboard.label}
-                  </BreadcrumbLink>
+                  </Link>
                 </BreadcrumbItem>
 
                 {breadcrumbs.map(({ label, path }, index) => (
@@ -46,7 +46,9 @@ function ProtectedLayout() {
                       {index === breadcrumbs.length - 1 ? (
                         <BreadcrumbPage>{label}</BreadcrumbPage>
                       ) : (
-                        <BreadcrumbLink href={path}>{label}</BreadcrumbLink>
+                        <Link to={path} className="text-sm font-medium text-muted-foreground hover:text-foreground">
+                          {label}
+                        </Link>
                       )}
                     </BreadcrumbItem>
                   </React.Fragment>
