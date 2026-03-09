@@ -122,15 +122,15 @@ export default function ClientForm({ client, dialogId }: ClientFormProps) {
         name="email"
         validators={{
           onChange: ({ value }) => {
-            if (!value) return 'El email es requerido'
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'El email no es válido'
+            if (isEditing && !value) return 'El email es requerido'
+            if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'El email no es válido'
             return undefined
           },
         }}
         children={(field) => (
           <div>
             <label htmlFor={field.name} className="text-sm font-medium">
-              Email
+              Email {!isEditing && '(opcional)'}
             </label>
             <Input
               id={field.name}

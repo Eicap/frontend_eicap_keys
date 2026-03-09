@@ -3,7 +3,7 @@ import z from "zod";
 const ClienSchema = z.object({
     id: z.uuid(),
     name: z.string(),
-    email: z.email(),
+    email: z.string().email().or(z.literal('')),
     phone: z.string(),
     createdAt: z.date(),
 });
@@ -16,7 +16,7 @@ type ClientList = z.infer<typeof ClientListSchema>;
 
 const CreateClientSchema = z.object({
     name: z.string().min(1, "Name is required"),
-    email: z.email("Invalid email address"),
+    email: z.email("Invalid email address").optional().or(z.literal('')),
     phone: z.string(),
 })
 
