@@ -14,7 +14,7 @@ class BatchService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener los clientes')
             }
-            throw new Error('Error al obtener los clientes')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener los clientes')
         }
     }
 
@@ -26,7 +26,7 @@ class BatchService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener el lote')
             }
-            throw new Error('Error al obtener el lote')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener el lote')
         }
     }
 
@@ -37,7 +37,7 @@ class BatchService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al crear el lote')
             }
-            throw new Error('Error al crear el lote')
+            throw new Error(error instanceof Error ? error.message : 'Error al crear el lote')
         }
     }
 
@@ -48,7 +48,7 @@ class BatchService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar el lote')
             }
-            throw new Error('Error al actualizar el lote')
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar el lote')
         }
     }
 }

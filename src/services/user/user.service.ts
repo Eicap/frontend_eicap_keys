@@ -12,7 +12,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Email o contraseña incorrectos')
             }
-            throw new Error('Error al iniciar sesión')
+            throw new Error(error instanceof Error ? error.message : 'Error al iniciar sesión')
         }
     }
 
@@ -24,7 +24,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener el usuario')
             }
-            throw new Error('Error al obtener el usuario')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener el usuario')
         }
     }
 
@@ -36,7 +36,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener el perfil')
             }
-            throw new Error('Error al obtener el perfil')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener el perfil')
         }
     }
 
@@ -50,7 +50,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener los usuarios')
             }
-            throw new Error('Error al obtener los usuarios')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener los usuarios')
         }
     }
 
@@ -61,7 +61,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al crear el usuario')
             }
-            throw new Error('Error al crear el usuario')
+            throw new Error(error instanceof Error ? error.message : 'Error al crear el usuario')
         }
     }
 
@@ -72,7 +72,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar el usuario')
             }
-            throw new Error('Error al actualizar el usuario')
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar el usuario')
         }
     }
 
@@ -83,7 +83,7 @@ class UserService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar el perfil')
             }
-            throw new Error('Error al actualizar el perfil')
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar el perfil')
         }
     }
 };

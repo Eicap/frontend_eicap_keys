@@ -14,7 +14,7 @@ class KeyTypeService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener las keys');
             }
-            throw new Error('Error al obtener las keys');
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener las keys');
         }
     }
 
@@ -26,7 +26,7 @@ class KeyTypeService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener la key');
             }
-            throw new Error('Error al obtener la key');
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener la key');
         }
     }
 
@@ -37,7 +37,7 @@ class KeyTypeService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al crear la key');
             }
-            throw new Error('Error al crear la key');
+            throw new Error(error instanceof Error ? error.message : 'Error al crear la key');
         }
     }
 
@@ -48,7 +48,7 @@ class KeyTypeService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar la key');
             }
-            throw new Error('Error al actualizar la key');
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar la key');
         }
     }
 
@@ -59,7 +59,7 @@ class KeyTypeService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar los permisos de la key');
             }
-            throw new Error('Error al actualizar los permisos de la key');
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar los permisos de la key');
         }
     }
 }

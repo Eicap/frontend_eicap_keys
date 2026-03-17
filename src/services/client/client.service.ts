@@ -14,7 +14,7 @@ export class ClientService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener los clientes')
             }
-            throw new Error('Error al obtener los clientes')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener los clientes')
         }
     }
 
@@ -26,7 +26,7 @@ export class ClientService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener el cliente')
             }
-            throw new Error('Error al obtener el cliente')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener el cliente')
         }
     }
 
@@ -37,7 +37,7 @@ export class ClientService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al crear el cliente')
             }
-            throw new Error('Error al crear el cliente')
+            throw new Error(error instanceof Error ? error.message : 'Error al crear el cliente')
         }
     }
 
@@ -48,7 +48,7 @@ export class ClientService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar el cliente')
             }
-            throw new Error('Error al actualizar el cliente')
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar el cliente')
         }
     }
 }

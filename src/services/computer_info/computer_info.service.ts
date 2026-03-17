@@ -15,7 +15,7 @@ class ComputerInfoService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener la información de la computadora')
             }
-            throw new Error('Error al obtener la información de la computadora')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener la información de la computadora')
         }
     }
 
@@ -26,7 +26,7 @@ class ComputerInfoService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al actualizar la información de la computadora')
             }
-            throw new Error('Error al actualizar la información de la computadora')
+            throw new Error(error instanceof Error ? error.message : 'Error al actualizar la información de la computadora')
         }
     }
 
@@ -38,7 +38,7 @@ class ComputerInfoService {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al obtener las conexiones de la computadora')
             }
-            throw new Error('Error al obtener las conexiones de la computadora')
+            throw new Error(error instanceof Error ? error.message : 'Error al obtener las conexiones de la computadora')
         }
     }
 }

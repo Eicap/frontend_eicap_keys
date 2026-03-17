@@ -16,7 +16,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener las keys");
       }
-      throw new Error("Error al obtener las keys");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener las keys");
     }
   }
 
@@ -30,7 +30,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener el historial de la key");
       }
-      throw new Error("Error al obtener el historial de la key");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener el historial de la key");
     }
   }
 
@@ -42,7 +42,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener la key");
       }
-      throw new Error("Error al obtener la key");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener la key");
     }
   }
 
@@ -54,7 +54,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener la key por código");
       }
-      throw new Error("Error al obtener la key por código");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener la key por código");
     }
   }
 
@@ -68,7 +68,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener las keys del cliente");
       }
-      throw new Error("Error al obtener las keys del cliente");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener las keys del cliente");
     }
   }
 
@@ -79,7 +79,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al actualizar la key");
       }
-      throw new Error("Error al actualizar la key");
+      throw new Error(error instanceof Error ? error.message : "Error al actualizar la key");
     }
   }
 
@@ -91,7 +91,7 @@ class KeyService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener las conexiones de la key");
       }
-      throw new Error("Error al obtener las conexiones de la key");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener las conexiones de la key");
     }
   }
 }

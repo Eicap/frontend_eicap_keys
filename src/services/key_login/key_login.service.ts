@@ -14,7 +14,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener los logins");
       }
-      throw new Error("Error al obtener los logins");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener los logins");
     }
   }
 
@@ -26,7 +26,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener los logins de la key");
       }
-      throw new Error("Error al obtener los logins de la key");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener los logins de la key");
     }
   }
 
@@ -38,7 +38,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener el login");
       }
-      throw new Error("Error al obtener el login");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener el login");
     }
   }
 
@@ -49,7 +49,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al eliminar las conexiones de la key");
       }
-      throw new Error("Error al eliminar las conexiones de la key");
+      throw new Error(error instanceof Error ? error.message : "Error al eliminar las conexiones de la key");
     }
   }
 
@@ -60,7 +60,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al eliminar las conexiones de la key");
       }
-      throw new Error("Error al eliminar las conexiones de la key");
+      throw new Error(error instanceof Error ? error.message : "Error al eliminar las conexiones de la key");
     }
   }
 
@@ -71,7 +71,7 @@ class KeyLoginService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al eliminar la conexión");
       }
-      throw new Error("Error al eliminar la conexión");
+      throw new Error(error instanceof Error ? error.message : "Error al eliminar la conexión");
     } 
   }
 }

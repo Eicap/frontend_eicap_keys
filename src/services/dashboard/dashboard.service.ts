@@ -11,7 +11,7 @@ class DashboardService {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || "Error al obtener estadísticas del dashboard");
       }
-      throw new Error("Error al obtener estadísticas del dashboard");
+      throw new Error(error instanceof Error ? error.message : "Error al obtener estadísticas del dashboard");
     }
   }
 }
