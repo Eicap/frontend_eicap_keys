@@ -8,13 +8,14 @@ import { toast } from 'sonner'
 interface ClientFormProps {
   client?: Client
   dialogId?: string
+  onSelect?: (client: Client) => void
 }
 
-export default function ClientForm({ client, dialogId }: ClientFormProps) {
+export default function ClientForm({ client, dialogId, onSelect }: ClientFormProps) {
   const isEditing = !!client
   const mutation = isEditing 
     ? useUpdateClientMutation(client.id, { dialogId }) 
-    : useCreateClientMutation({ dialogId })
+    : useCreateClientMutation({ dialogId }, onSelect)
   const schema = isEditing ? UpdateClientSchema : CreateClientSchema
 
   const defaultValues = isEditing
@@ -62,17 +63,9 @@ export default function ClientForm({ client, dialogId }: ClientFormProps) {
       }
 
       if (isEditing) {
-        toast.promise(mutation.mutateAsync(dataToSubmit), {
-          loading: 'Actualizando cliente...',
-          success: 'Cliente actualizado exitosamente',
-          error: (err) => (err as Error).message || 'Error al actualizar cliente',
-        })
+        await mutation.mutateAsync(dataToSubmit)
       } else {
-        toast.promise(mutation.mutateAsync(dataToSubmit), {
-          loading: 'Creando cliente...',
-          success: 'Cliente creado exitosamente',
-          error: (err) => (err as Error).message || 'Error al crear cliente',
-        })
+        await mutation.mutateAsync(dataToSubmit)
       }
     },
   })

@@ -5,6 +5,7 @@ import { useTableFilters } from '@/hooks/use-table-filters'
 import type { Client } from '@/services/client/client.schema'
 import type { ColumnDef } from '@tanstack/react-table'
 import { useAppStore } from '@/store/app'
+import ClientForm from './client.form'
 
 interface ClientSelectorProps {
   onSelect: (client: Client) => void
@@ -20,7 +21,7 @@ export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
     setLimit,
     setSearchQuery,
   } = useTableFilters()
-  const { closeDialog } = useAppStore()
+  const { closeDialog, openDialog } = useAppStore()
 
   const { data, isLoading } = useQueryClient({
     offset,
@@ -38,6 +39,23 @@ export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
         closeDialog(dialogId)
       }, 100)
     }
+  }
+
+  const handleOpenCreateClient = () => {
+    const createDialogId = `client-create-dialog-${Date.now()}`
+    openDialog({
+      id: createDialogId,
+      title: 'Crear Nuevo Cliente',
+      width: 'max-w-md',
+      content: (
+        <ClientForm
+          dialogId={createDialogId}
+          onSelect={onSelect}
+        />
+      ),
+      confirmText: undefined,
+      cancelText: 'Cancelar',
+    })
   }
 
   const columns: ColumnDef<Client>[] = [
@@ -72,7 +90,15 @@ export function ClientSelector({ onSelect, dialogId }: ClientSelectorProps) {
   ]
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
+      <div className="flex justify-end">
+        <Button 
+          onClick={handleOpenCreateClient}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          Crear Cliente
+        </Button>
+      </div>
       <DataTable
         columns={columns}
         data={data?.data || []}

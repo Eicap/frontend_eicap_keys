@@ -30,9 +30,10 @@ export class ClientService {
         }
     }
 
-    async create(data: CreateClient): Promise<void> {
+    async create(data: CreateClient): Promise<Client> {
         try {
-            await api.post('/clients', data)
+            const response = await api.post('/clients', data)
+            return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(error.response?.data?.message || 'Error al crear el cliente')
