@@ -46,7 +46,7 @@ function Keys() {
     const dialogId = `key-edit-${key.id}`;
     openDialog({
       id: dialogId,
-      title: "Editar Cliente",
+      title: "Editar Key",
       content: <KeyForm keyData={key} dialogId={dialogId} />,
       confirmText: undefined,
       cancelText: "Cerrar",

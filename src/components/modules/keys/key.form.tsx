@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ClientSelector } from "../clients/selector.client";
+import { KeyTypeSelector } from "../key_types/selector.key_type";
 import { useAppStore } from "@/store/app";
 import type { Client } from "@/services/client/client.schema";
+import type { KeyType } from "@/services/key_type/key_type.schema";
 
 interface KeyFormProps {
   keyData: Key;
@@ -18,6 +20,9 @@ interface KeyFormProps {
 export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
   const [selectedClient, setSelectedClient] = useState<{ id: string; name: string; email: string } | null>(
     keyData.client || null
+  );
+  const [selectedKeyType, setSelectedKeyType] = useState<{ id: string; name: string }>(
+    keyData.key_type
   );
   const { openDialog, closeDialog } = useAppStore();
 
@@ -63,6 +68,11 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
         hasDirtyFields = true;
       }
 
+      if (formValues.key_type_id !== defaultValues.key_type_id) {
+        dirtyFields.key_type_id = formValues.key_type_id;
+        hasDirtyFields = true;
+      }
+
       if (formValues.client_id !== defaultValues.client_id) {
         dirtyFields.client_id = formValues.client_id || null;
         hasDirtyFields = true;
@@ -101,6 +111,30 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
             form.setFieldValue("client_id", client.id);
             closeDialog(selectorDialogId);
           }}
+        />
+      ),
+      confirmText: undefined,
+      cancelText: "Cerrar",
+    });
+  };
+
+  const handleOpenKeyTypeSelector = () => {
+    const selectorDialogId = `key-edit-keytype-selector-${Date.now()}`;
+    openDialog({
+      id: selectorDialogId,
+      title: "Seleccionar Tipo de Key",
+      width: "max-w-4xl",
+      content: (
+        <KeyTypeSelector
+          onSelect={(keyType: KeyType) => {
+            setSelectedKeyType({
+              id: keyType.id,
+              name: keyType.name,
+            });
+            form.setFieldValue("key_type_id", keyType.id);
+            closeDialog(selectorDialogId);
+          }}
+          dialogId={selectorDialogId}
         />
       ),
       confirmText: undefined,
@@ -187,6 +221,20 @@ export default function KeyForm({ keyData, dialogId }: KeyFormProps) {
               </div>
             )}
           />
+
+          {/* Tipo de Key */}
+          <div>
+            <label className="text-sm font-medium">Tipo de Key</label>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+              onClick={handleOpenKeyTypeSelector}
+              disabled={mutation.isPending}
+            >
+              {selectedKeyType ? selectedKeyType.name : "Selecciona un tipo de key"}
+            </Button>
+          </div>
 
           {/* Cliente */}
           <div>
